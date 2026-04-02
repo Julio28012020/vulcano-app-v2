@@ -8,6 +8,7 @@ export const MyRoutes = () => (
     <Routes>
         <Route path="/" element={<VulcanHome/>}/>
         <Route path="/Login" element={<VulcanoLogin/>}/>
+        <Route path="/Course" element={<CoursePages/>}/>
         <Route path="/Review" />
         <Route path="*" element={<Page404/>}/>
     </Routes>

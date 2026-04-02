@@ -98,7 +98,7 @@ const VulcanoFooter = () => {
       {/* --- Barra inferior --- */}
       {/* Copyright y nombre del equipo */}
       <div className="vf-bottom-bar">
-        <span>© 2025 Vulcano App · Todos los derechos reservados</span>
+        <span>© 2026 Vulcano App · Todos los derechos reservados</span>
         <span className="vf-bottom-divider">·</span>
         <span>Team Vulcano 🌋</span>
       </div>
