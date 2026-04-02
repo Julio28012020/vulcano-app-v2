@@ -1,31 +1,31 @@
 /* Fondo oscuro y fuente del footer completo */
 .vf-footer {
-  background-color: var(--color-dark);
-  font-family: 'Nunito', sans-serif;
-  position: relative;
+  background-color: var(--color-dark);   /* Fondo oscuro del footer */
+  font-family: 'Nunito', sans-serif;     /* Fuente Nunito para todo el footer */
+  position: relative;                    /* Permite posicionar elementos hijos */
 }
 
 /* Línea decorativa con degradado rosado en la parte superior */
 .vf-top-border {
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-blush) 20%,
-    var(--color-mid) 50%,
-    var(--color-blush) 80%,
-    transparent 100%
+  height: 2px;                           /* Altura de la línea decorativa */
+  background: linear-gradient(           /* Degradado de izquierda a derecha */
+    90deg,                               /* Dirección horizontal */
+    transparent 0%,                      /* Empieza transparente */
+    var(--color-blush) 20%,              /* Se vuelve rosado al 20% */
+    var(--color-mid) 50%,                /* Color intermedio en el centro */
+    var(--color-blush) 80%,              /* Vuelve a rosado al 80% */
+    transparent 100%                     /* Termina transparente */
   );
 }
 
 /* Grid de 3 columnas centrado con ancho máximo */
 .vf-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 10px 24px 8px;
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1.4fr;
-  gap: 16px;
+  max-width: 1000px;                     /* Ancho máximo del contenedor */
+  margin: 0 auto;                        /* Centra el contenedor horizontalmente */
+  padding: 10px 24px 8px;               /* Espaciado interno: arriba, lados, abajo */
+  display: grid;                         /* Activa el modelo de grid */
+  grid-template-columns: 1.6fr 1fr 1.4fr; /* 3 columnas con proporciones distintas */
+  gap: 16px;                             /* Espacio entre las columnas */
 }
 
 
@@ -33,35 +33,35 @@
 /* --- MARCA --- */
 
 .vf-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: flex;                         /* Activa flexbox */
+  flex-direction: column;                /* Apila elementos en vertical */
+  gap: 4px;                              /* Espacio entre logo y descripción */
 }
 
 .vf-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display: flex;                         /* Activa flexbox */
+  align-items: center;                   /* Centra verticalmente el ícono y el texto */
+  gap: 6px;                              /* Espacio entre ícono y texto */
 }
 
 .vf-logo-icon {
-  height: 26px;
-  width: 26px;
-  object-fit: contain;
+  height: 26px;                          /* Altura del ícono del logo */
+  width: 26px;                           /* Ancho del ícono del logo */
+  object-fit: contain;                   /* Mantiene proporción sin distorsionar */
 }
 
 .vf-logo-text {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--color-white);
-  letter-spacing: 1.5px;
+  font-size: 13px;                       /* Tamaño del texto del logo */
+  font-weight: 800;                      /* Texto muy grueso */
+  color: var(--color-white);             /* Color blanco */
+  letter-spacing: 1.5px;                /* Espaciado entre letras */
 }
 
 .vf-brand-desc {
-  font-size: 10px;
-  line-height: 1.4;
-  color: var(--color-blush);
-  max-width: 220px;
+  font-size: 10px;                       /* Tamaño pequeño para la descripción */
+  line-height: 1.4;                      /* Espaciado entre líneas */
+  color: var(--color-blush);             /* Color rosado */
+  max-width: 220px;                      /* Limita el ancho del texto */
 }
 
 
@@ -69,14 +69,14 @@
 /* --- TÍTULO DE CADA COLUMNA --- */
 
 .vf-col-title {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--color-cream);
-  margin-bottom: 6px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(211, 171, 176, 0.25);
+  font-size: 9px;                        /* Tamaño pequeño para el título */
+  font-weight: 800;                      /* Texto muy grueso */
+  letter-spacing: 2px;                   /* Espaciado amplio entre letras */
+  text-transform: uppercase;             /* Convierte el texto a mayúsculas */
+  color: var(--color-cream);             /* Color crema */
+  margin-bottom: 6px;                    /* Espacio debajo del título */
+  padding-bottom: 4px;                   /* Espacio interno debajo del texto */
+  border-bottom: 1px solid rgba(211, 171, 176, 0.25); /* Línea separadora semitransparente */
 }
 
 
@@ -84,31 +84,31 @@
 /* --- NAVEGACIÓN --- */
 
 .vf-nav-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  list-style: none;                      /* Quita los puntos de la lista */
+  display: flex;                         /* Activa flexbox */
+  flex-direction: column;                /* Apila los links en vertical */
+  gap: 2px;                              /* Espacio pequeño entre links */
 }
 
 .vf-nav-link {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--color-blush);
-  text-decoration: none;
-  font-size: 11px;
-  font-weight: 700;
-  transition: color 0.2s ease, gap 0.2s ease;
+  display: flex;                         /* Activa flexbox */
+  align-items: center;                   /* Centra verticalmente la flecha y el texto */
+  gap: 5px;                              /* Espacio entre la flecha y el texto */
+  color: var(--color-blush);             /* Color rosado */
+  text-decoration: none;                 /* Quita el subrayado del link */
+  font-size: 11px;                       /* Tamaño del texto */
+  font-weight: 700;                      /* Texto grueso */
+  transition: color 0.2s ease, gap 0.2s ease; /* Anima color y espacio suavemente */
 }
 
 .vf-nav-link:hover {
-  color: var(--color-cream);
-  gap: 9px;
+  color: var(--color-cream);             /* Cambia a crema al pasar el cursor */
+  gap: 9px;                              /* Aumenta el espacio para efecto de movimiento */
 }
 
 .vf-link-arrow {
-  font-size: 6px;
-  opacity: 0.6;
+  font-size: 6px;                        /* Tamaño pequeño de la flecha */
+  opacity: 0.6;                          /* Semitransparente */
 }
 
 
@@ -116,61 +116,61 @@
 /* ---------- EQUIPO ---------- */
 
 .vf-team-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  list-style: none;                      /* Quita los puntos de la lista */
+  display: flex;                         /* Activa flexbox */
+  flex-direction: column;                /* Apila los miembros en vertical */
+  gap: 3px;                              /* Espacio entre miembros */
 }
 
 .vf-team-member {
-  display: flex;
+  display: flex;                         /* Activa flexbox */
 }
 
 .vf-member-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  transition: transform 0.2s ease;
+  display: flex;                         /* Activa flexbox */
+  align-items: center;                   /* Centra verticalmente avatar y nombre */
+  gap: 6px;                              /* Espacio entre avatar y nombre */
+  text-decoration: none;                 /* Quita el subrayado */
+  transition: transform 0.2s ease;       /* Anima el movimiento al hacer hover */
 }
 
 .vf-member-link:hover {
-  transform: translateX(4px);
+  transform: translateX(4px);            /* Mueve el elemento 4px a la derecha al hover */
 }
 
 .vf-member-avatar {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: var(--color-mid);
-  color: var(--color-white);
-  font-size: 9px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border: 1px solid var(--color-blush);
-  transition: background-color 0.2s ease;
+  width: 18px;                           /* Ancho del círculo avatar */
+  height: 18px;                          /* Alto del círculo avatar */
+  border-radius: 50%;                    /* Hace el elemento circular */
+  background-color: var(--color-mid);    /* Color de fondo del avatar */
+  color: var(--color-white);             /* Color de la letra inicial */
+  font-size: 9px;                        /* Tamaño de la letra inicial */
+  font-weight: 800;                      /* Letra muy gruesa */
+  display: flex;                         /* Activa flexbox para centrar la letra */
+  align-items: center;                   /* Centra verticalmente la letra */
+  justify-content: center;               /* Centra horizontalmente la letra */
+  flex-shrink: 0;                        /* Evita que el avatar se encoja */
+  border: 1px solid var(--color-blush);  /* Borde rosado alrededor del avatar */
+  transition: background-color 0.2s ease; /* Anima el cambio de color de fondo */
 }
 
 .vf-member-link:hover .vf-member-avatar {
-  background-color: var(--color-blush);
-  color: var(--color-dark);
+  background-color: var(--color-blush);  /* Cambia fondo a rosado al hover */
+  color: var(--color-dark);              /* Cambia letra a oscuro al hover */
 }
 
 .vf-member-name {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--color-white);
-  line-height: 1.2;
-  display: block;
+  font-size: 10px;                       /* Tamaño del nombre del miembro */
+  font-weight: 700;                      /* Nombre en negrita */
+  color: var(--color-white);             /* Color blanco */
+  line-height: 1.2;                      /* Espaciado entre líneas */
+  display: block;                        /* Ocupa su propia línea */
 }
 
 .vf-member-role {
-  font-size: 9px;
-  color: var(--color-mid);
-  display: block;
+  font-size: 9px;                        /* Tamaño pequeño del cargo */
+  color: var(--color-mid);               /* Color intermedio más tenue */
+  display: block;                        /* Ocupa su propia línea */
 }
 
 
@@ -178,26 +178,26 @@
 /* --- BARRA INFERIOR --- */
 
 .vf-bottom-bar {
-  border-top: 1px solid rgba(211, 171, 176, 0.2);
-  padding: 6px 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 10px;
-  color: var(--color-mid);
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  border-top: 1px solid rgba(211, 171, 176, 0.2); /* Línea separadora semitransparente */
+  padding: 6px 24px;                     /* Espaciado interno */
+  display: flex;                         /* Activa flexbox */
+  justify-content: center;               /* Centra el contenido horizontalmente */
+  align-items: center;                   /* Centra el contenido verticalmente */
+  gap: 8px;                              /* Espacio entre los textos */
+  flex-wrap: wrap;                       /* Permite que el contenido salte de línea */
+  font-size: 10px;                       /* Tamaño del texto */
+  color: var(--color-mid);               /* Color intermedio */
+  font-weight: 600;                      /* Texto semi-negrita */
+  letter-spacing: 0.5px;                /* Espaciado leve entre letras */
 }
 
 .vf-bottom-divider {
-  color: var(--color-blush);
-  opacity: 0.5;
+  color: var(--color-blush);             /* Color rosado del separador */
+  opacity: 0.5;                          /* Semitransparente */
 }
 
 .vf-bottom-bar span:last-child {
-  font-size: 12px;
+  font-size: 12px;                       /* Tamaño ligeramente mayor para el emoji del equipo */
 }
 
 
@@ -207,67 +207,65 @@
 /* BREAKPOINT: Tablets (max-width: 1024px) */
 @media (max-width: 1024px) {
   .vf-container {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 10px 20px 8px;
+    grid-template-columns: 1fr 1fr;     /* Cambia a 2 columnas iguales */
+    gap: 16px;                          /* Espacio entre columnas */
+    padding: 10px 20px 8px;             /* Reduce el padding lateral */
   }
 
-  /* La columna de marca ocupa toda la fila superior */
   .vf-brand {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
+    grid-column: 1 / -1;                 /* La marca ocupa toda la fila */
+    flex-direction: row;                 /* Logo y descripción en horizontal */
+    align-items: center;                 /* Centra verticalmente */
+    gap: 16px;                           /* Espacio entre logo y descripción */
   }
 
   .vf-brand-desc {
-    max-width: 100%;
-    margin: 0;
+    max-width: 100%;                     /* La descripción ocupa todo el ancho */
+    margin: 0;                           /* Quita margen */
   }
 }
 
 /* BREAKPOINT: Móviles (max-width: 768px) */
 @media (max-width: 768px) {
   .vf-container {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 10px 16px 8px;
+    grid-template-columns: 1fr 1fr;      /* Mantiene 2 columnas en móvil */
+    gap: 12px;                           /* Reduce el espacio entre columnas */
+    padding: 10px 16px 8px;             /* Reduce el padding lateral */
   }
 
-  /* Marca en fila completa arriba */
   .vf-brand {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 10px;
+    grid-column: 1 / -1;                 /* La marca ocupa toda la fila */
+    flex-direction: row;                 /* Logo y descripción en horizontal */
+    align-items: flex-start;             /* Alinea al inicio verticalmente */
+    gap: 10px;                           /* Reduce el espacio */
   }
 
   .vf-brand-desc {
-    font-size: 9px;
-    max-width: 100%;
+    font-size: 9px;                      /* Reduce el tamaño del texto */
+    max-width: 100%;                     /* Ocupa todo el ancho disponible */
   }
 
   .vf-bottom-bar {
-    padding: 6px 16px;
-    font-size: 9px;
+    padding: 6px 16px;                   /* Reduce el padding */
+    font-size: 9px;                      /* Reduce el tamaño del texto */
   }
 
   .vf-bottom-bar span:last-child {
-    font-size: 11px;
+    font-size: 11px;                     /* Reduce tamaño del emoji */
   }
 }
 
 /* BREAKPOINT: Móviles muy pequeños (max-width: 480px) */
 @media (max-width: 480px) {
   .vf-container {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 10px 14px 8px;
+    grid-template-columns: 1fr;          /* Cambia a 1 sola columna */
+    gap: 10px;                           /* Reduce el espacio entre filas */
+    padding: 10px 14px 8px;             /* Reduce el padding lateral */
   }
 
   .vf-brand {
-    grid-column: auto;
-    flex-direction: column;
-    gap: 4px;
+    grid-column: auto;                   /* La marca vuelve a ocupar solo su columna */
+    flex-direction: column;              /* Logo y descripción en vertical */
+    gap: 4px;                            /* Espacio mínimo entre elementos */
   }
 }
