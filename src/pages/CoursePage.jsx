@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import NavbarPpal from '../components/NavbarPpal';
 import VulcanoFooter from '../components/VulcanoFooter';
 import '../styles/Course.css';
-import { getCourses, createCourse, updateCourse, deleteCourse } from "../services/courseService";
+import { getCourses, createCourse, updateCourse, deleteCourse } from "../services/courseservises";
 import Modal from '../components/Modal';
 import CourseForm from '../components/CourseForm';
 import CourseCard from '../components/CourseCard';
