@@ -8,6 +8,8 @@ import ModuleView from "../pages/ModuleView"
 import CoursePage from "../pages/CoursePage"
 // Importamos el Layout al que redirigimos después del login exitoso
 import Layout from "../pages/layout/Layout";
+import DashboardHome from "../pages/layout/DashboardHome";
+import ClassScheduling from "../components/ClassScheduling";
 
 export const MyRoutes = () => (
     <BrowserRouter>
@@ -18,8 +20,13 @@ export const MyRoutes = () => (
             <Route path="/Course" element={<CoursePage />} />
             <Route path="/ModuleView" element={<ModuleView />} />
             <Route path="/Review" element={<Review />} />
-            {/* Ruta de destino después del login */}
-            <Route path="/layout" element={<Layout />} />
+            {/* Ruta principal con barra lateral */}
+            <Route path="/layout" element={<Layout />}>
+                {/* Lo que se carga por defecto en /layout */}
+                <Route index element={<DashboardHome />} />
+                {/* Lo que se carga en /layout/agendar */}
+                <Route path="agendar" element={<ClassScheduling />} />
+            </Route>
             <Route path="*" element={<Page404 />} />
         </Routes>
     </BrowserRouter>

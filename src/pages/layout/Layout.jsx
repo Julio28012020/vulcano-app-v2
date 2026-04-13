@@ -14,7 +14,7 @@
 // ============================================================
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import "../../styles/Layout.css";
 import EditProfileModal from "../../components/EditProfileModal";
 
@@ -44,7 +44,7 @@ const Layout = () => {
   // PASO 2: Estado para mostrar/ocultar el modal de edición
   // ----------------------------------------------------------
   const [showEditModal, setShowEditModal] = useState(false);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   // ----------------------------------------------------------
   // handleLogout: Limpia la sesión y redirige al Login
   // ----------------------------------------------------------
@@ -77,8 +77,8 @@ const Layout = () => {
       {/* ════════════════════════════════════════════════════
           SIDEBAR LATERAL IZQUIERDO
           ════════════════════════════════════════════════════ */}
-      <aside className="layout-sidebar">
-
+      <aside className={`layout-sidebar ${isSidebarOpen ? "open" : "closed"}`}>
+        <div className="sidebar-inner">
         {/* ── ZONA SUPERIOR: Foto y nombre del usuario ─── */}
         <div className="sidebar-profile">
 
@@ -104,13 +104,48 @@ const Layout = () => {
         {/* ── ZONA MEDIA: Botones de navegación ────────── */}
         <nav className="sidebar-nav">
           {/* Botón "Cursos" → navega normalmente a /Course */}
+
+          <button
+            className="sidebar-nav-btn"
+            onClick={() => navigate("/Course")}
+          >
+            <span className="btn-icon">🏠</span>
+            <span className="sidebar-text">Inicio</span>
+          </button>
+
           <button
             className="sidebar-nav-btn"
             onClick={() => navigate("/Course")}
           >
             <span className="btn-icon">📚</span>
-            Cursos
+            <span className="sidebar-text">Cursos</span>
           </button>
+
+          <button
+            className="sidebar-nav-btn"
+            onClick={() => navigate("/Course")}
+          >
+            <span className="btn-icon">🎓</span>
+            <span className="sidebar-text">Modulos</span>
+          </button>
+
+            <button
+            className="sidebar-nav-btn"
+            onClick={() => navigate("/layout/agendar")}
+          >
+            <span className="btn-icon">📅</span>
+            <span className="sidebar-text">Agendar Clases</span>
+          </button>
+    
+
+          <button
+            className="sidebar-nav-btn"
+            onClick={() => navigate("/Course")}
+          >
+            <span className="btn-icon">💬</span>
+            <span className="sidebar-text">Opiniones</span>
+          </button>
+
         </nav>
 
         {/* ── ZONA INFERIOR: Acciones del perfil ─────── */}
@@ -120,8 +155,8 @@ const Layout = () => {
             className="sidebar-footer-btn"
             onClick={() => setShowEditModal(true)}
           >
-            <span>✏️</span>
-            Modificar Perfil
+            <span className="btn-icon">✏️</span>
+            <span className="sidebar-text">Modificar Perfil</span>
           </button>
 
           {/* Botón para cerrar sesión */}
@@ -129,58 +164,30 @@ const Layout = () => {
             className="sidebar-footer-btn danger"
             onClick={handleLogout}
           >
-            <span>🚪</span>
-            Cerrar sesión
+            <span className="btn-icon">🚪</span>
+            <span className="sidebar-text">Cerrar sesión</span>
           </button>
+        </div>
         </div>
       </aside>
 
       {/* ════════════════════════════════════════════════════
           ÁREA MAIN — Mensaje de bienvenida + accesos rápidos
           ════════════════════════════════════════════════════ */}
-      <main className="layout-main">
+      <main className={`layout-main ${isSidebarOpen ? "" : "expanded"}`}>
 
-        {/* Ícono animado */}
-        <div className="layout-welcome-icon">🌋</div>
+        {/* Botón de toggle del sidebar */}
+        <button 
+          className="sidebar-toggle-btn" 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          title={isSidebarOpen ? "Ocultar menú" : "Mostrar menú"}
+        >
+          {isSidebarOpen ? "◀" : "☰"}
+        </button>
 
-        {/* Saludo personalizado con el nombre del usuario */}
-        <h1 className="layout-welcome-title">
-          ¡Bienvenido, {firstName}!
-        </h1>
+        {/* Aquí se renderizarán DashboardHome o ClassScheduling dependiendo de la URL */}
+        <Outlet context={{ setShowEditModal, firstName }} />
 
-        <p className="layout-welcome-subtitle">
-          Estás dentro del sistema Vulcano. Selecciona una opción
-          del menú lateral para comenzar.
-        </p>
-
-        {/* Accesos rápidos — son clickeables igual que los botones del sidebar */}
-        <div className="layout-action-cards">
-
-          {/* Tarjeta: ir a Cursos */}
-          <div
-            className="layout-action-card"
-            onClick={() => navigate("/Course")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && navigate("/Course")}
-          >
-            <span className="layout-action-card-icon">📚</span>
-            <span className="layout-action-card-title">Cursos</span>
-          </div>
-
-          {/* Tarjeta: abrir edición de perfil */}
-          <div
-            className="layout-action-card"
-            onClick={() => setShowEditModal(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && setShowEditModal(true)}
-          >
-            <span className="layout-action-card-icon">✏️</span>
-            <span className="layout-action-card-title">Mi Perfil</span>
-          </div>
-
-        </div>
       </main>
 
       {/* ════════════════════════════════════════════════════
