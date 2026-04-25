@@ -22,10 +22,10 @@ const DashboardHome = () => {
         {/* Tarjeta: ir a Cursos */}
         <div
           className="layout-action-card"
-          onClick={() => navigate("/Course")}
+          onClick={() => navigate("/layout/Course")}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && navigate("/Course")}
+          onKeyDown={(e) => e.key === "Enter" && navigate("/layout/Course")}
         >
           <span className="layout-action-card-icon">📚</span>
           <span className="layout-action-card-title">Cursos</span>

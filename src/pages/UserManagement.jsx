@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAllUsers, updateUserRole } from "../services/api";
+import Swal from "sweetalert2";
 import Layout from "./layout/Layout";
 import ConfirmModal from "../components/ConfirmModal";
 import "../styles/UserManagement.css";
@@ -53,7 +54,14 @@ const UserManagement = () => {
                 u.id === user.id ? { ...u, role: newRole } : u
             ));
         } catch (err) {
-            alert(err.message || "No se pudo actualizar el rol.");
+            Swal.fire({
+                title: "Error",
+                text: err.message || "No se pudo actualizar el rol.",
+                icon: "error",
+                confirmButtonColor: "#472825",
+                background: "#fff4e2",
+                color: "#472825"
+            });
         } finally {
             setActionLoading(null);
         }

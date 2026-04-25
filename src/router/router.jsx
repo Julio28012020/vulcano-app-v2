@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import VulcanHome from "../pages/VulcanHome";
 import VulcanoLogin from "../components/VulcanoLogin";
 import VulcanoRegister from "../components/VulcanoRegister";
@@ -11,23 +11,64 @@ import Dashboard from "../pages/Dashboard";
 import Layout from "../pages/layout/Layout";
 import DashboardHome from "../pages/layout/DashboardHome";
 import ClassScheduling from "../components/ClassScheduling";
+import ClassManagement from "../components/ClassManagement";
+import TeacherForm from "../components/TeacherForm";
 
-export const MyRoutes = () => (
-    <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<VulcanHome />} />
-            <Route path="/Login" element={<VulcanoLogin />} />
-            <Route path="/Register" element={<VulcanoRegister />} />
-            <Route path="/Course" element={<CoursePage />} />
-            <Route path="/ModuleView" element={<ModuleView />} />
-            <Route path="/Review" element={<Review />} />
-            <Route path="/Users" element={<UserManagement />} />
-            <Route path="/Dashboard" element={<Dashboard />} />
-            <Route path="/layout" element={<Layout />}>
-                <Route index element={<DashboardHome />} />
-                <Route path="agendar" element={<ClassScheduling />} />
-            </Route>
-            <Route path="*" element={<Page404 />} />
-        </Routes>
-    </BrowserRouter>
-);
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <VulcanHome />,
+    },
+    {
+        path: "/Login",
+        element: <VulcanoLogin />,
+    },
+    {
+        path: "/Register",
+        element: <VulcanoRegister />,
+    },
+    {
+        path: "/layout",
+        element: <Layout />,
+        children: [
+            {
+                index: true,
+                element: <DashboardHome />,
+            },
+            {
+                path: "Course",
+                element: <CoursePage />,
+            },
+            {
+                path: "ModuleView",
+                element: <ModuleView />,
+            },
+            {
+                path: "agendar",
+                element: <ClassScheduling />,
+            },
+            {
+                path: "clases",
+                element: <ClassManagement />,
+            },
+            {
+                path: "docentes",
+                element: <TeacherForm />,
+            },
+            {
+                path: "Review",
+                element: <Review />,
+            },
+            {
+                path: "Users",
+                element: <UserManagement />,
+            }
+        ],
+    },
+    {
+        path: "*",
+        element: <Page404 />,
+    },
+]);
+
+export const MyRoutes = () => <RouterProvider router={router} />;
