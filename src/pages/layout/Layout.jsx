@@ -18,6 +18,7 @@ import { useNavigate, Outlet } from "react-router-dom";
 import "../../styles/Layout.css";
 import EditProfileModal from "../../components/EditProfileModal";
 import { getUserById } from "../../services/api";
+import { Icon } from "@iconify/react";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const Layout = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/Login");
+    navigate("/");
   };
 
   const handleProfileUpdated = (updatedUser) => {
@@ -90,7 +91,7 @@ const Layout = ({ children }) => {
 
           <button
             className="sidebar-nav-btn"
-            onClick={() => navigate("/Course")}
+            onClick={() => navigate("/layout/Course")}
           >
             <span className="btn-icon">📚</span>
             <span className="sidebar-text">Cursos</span>
@@ -98,7 +99,7 @@ const Layout = ({ children }) => {
 
           <button
             className="sidebar-nav-btn"
-            onClick={() => navigate("/ModuleView")}
+            onClick={() => navigate("/layout/ModuleView")}
           >
             <span className="btn-icon">🎓</span>
             <span className="sidebar-text">Módulos</span>
@@ -112,13 +113,16 @@ const Layout = ({ children }) => {
             <span className="sidebar-text">Agendar Clases</span>
           </button>
 
+
+          
           <button
             className="sidebar-nav-btn"
-            onClick={() => navigate("/Review")}
+            onClick={() => navigate("/layout/Review")}
           >
             <span className="btn-icon">💬</span>
             <span className="sidebar-text">Opiniones</span>
           </button>
+           
 
           {user?.role === "ADMIN" && (
             <button
@@ -129,6 +133,14 @@ const Layout = ({ children }) => {
               <span className="sidebar-text">Usuarios</span>
             </button>
           )}
+
+          <button
+            className="sidebar-nav-btn"
+            onClick={() => navigate("/layout/clases")}
+          >
+            <span className="btn-icon"><Icon icon="fluent-emoji-flat:teacher-light" width="32" height="32" /></span>
+            <span className="sidebar-text">Clases</span>
+          </button>
         </nav>
 
         <div className="sidebar-footer">

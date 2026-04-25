@@ -19,7 +19,7 @@ const VulcanoMain = () => {
             ¡La forma divertida y eficaz de aprender sobre programación!
           </h1>
           <div className="vh-button-group">
-            <button className="vh-btn-primary">EMPIEZA AHORA</button>
+            <button onClick={()=>navigate("/Register")} className="vh-btn-primary">REGISTRATE</button>
             <button onClick={()=>navigate("/Login")} className="vh-btn-secondary">YA TENGO UNA CUENTA</button>
           </div>
         </div>
