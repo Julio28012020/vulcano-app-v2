@@ -4,6 +4,7 @@ import VulcanoFooter from '../components/VulcanoFooter';
 import ModuleCard from '../components/ModuleCard';
 import ModuleForm, { emptyModule } from '../components/ModuleForm';
 import { getModules, createModule, updateModule, deleteModule } from '../services/moduleService';
+import Swal from 'sweetalert2';
 import '../styles/ModuleView.css';
 
 const mascotSvg = '/Icons/vulcancito.svg';
@@ -15,13 +16,6 @@ const ModuleView = () => {
   const [editing, setEditing] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState(null);
-
-  /* ---- Toast ---- */
-  const showToast = (msg) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
-  };
 
   /* ---- Carga de datos ---- */
   const load = () => {
@@ -40,18 +34,30 @@ const ModuleView = () => {
   useEffect(() => { load(); }, []);
 
   /* ---- CRUD handlers ---- */
-  const handleCreate = (form) => {
+  const handleCreate = (form, courseId) => {
     setSaving(true);
-    createModule(form)
+    createModule(form, courseId)
       .then(() => {
         setSaving(false);
         setModal(null);
-        showToast('✅ Módulo creado exitosamente');
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Módulo creado exitosamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#472825'
+        });
         load();
       })
       .catch(() => {
         setSaving(false);
-        showToast('❌ Error al crear el módulo');
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo crear el módulo',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#472825'
+        });
       });
   };
 
@@ -62,12 +68,24 @@ const ModuleView = () => {
         setSaving(false);
         setModal(null);
         setEditing(null);
-        showToast('✅ Módulo actualizado');
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Módulo actualizado',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#472825'
+        });
         load();
       })
       .catch(() => {
         setSaving(false);
-        showToast('❌ Error al actualizar el módulo');
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo actualizar el módulo',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#472825'
+        });
       });
   };
 
@@ -81,13 +99,25 @@ const ModuleView = () => {
       .then(() => {
         setDeleteId(null);
         setModal(null);
-        showToast('🗑️ Módulo eliminado');
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: 'Módulo eliminado',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#472825'
+        });
         load();
       })
       .catch(() => {
         setDeleteId(null);
         setModal(null);
-        showToast('❌ Error al eliminar el módulo');
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo eliminar el módulo',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#472825'
+        });
       });
   };
 
@@ -254,9 +284,6 @@ const ModuleView = () => {
           </div>
         </div>
       )}
-
-      {/* ---- Toast ---- */}
-      {toast && <div className="mv-toast">{toast}</div>}
 
       <VulcanoFooter />
     </div>

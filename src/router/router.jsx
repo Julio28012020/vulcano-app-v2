@@ -11,6 +11,7 @@ import Dashboard from "../pages/Dashboard";
 import Layout from "../pages/layout/Layout";
 import DashboardHome from "../pages/layout/DashboardHome";
 import ClassScheduling from "../components/ClassScheduling";
+import StudentModuleView from "../pages/StudentModuleView";
 
 export const MyRoutes = () => (
     <BrowserRouter>
@@ -20,6 +21,8 @@ export const MyRoutes = () => (
             <Route path="/Register" element={<VulcanoRegister />} />
             <Route path="/Course" element={<CoursePage />} />
             <Route path="/ModuleView" element={<ModuleView />} />
+            <Route path="/StudentModules" element={<StudentModuleView />} />
+            <Route path="/StudentModules/:moduleId" element={<StudentModuleView />} />
             <Route path="/Review" element={<Review />} />
             <Route path="/Users" element={<UserManagement />} />
             <Route path="/Dashboard" element={<Dashboard />} />

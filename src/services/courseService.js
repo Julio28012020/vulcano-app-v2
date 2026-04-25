@@ -5,8 +5,8 @@
  * Se encarga de hacer las peticiones usando la API Fetch estándar de JS.
  */
 
-// URL base donde se encuentra arrancado tu servidor de Spring Boot
-const API = "http://localhost:8080/api/courses";
+// URL base - Vite hace proxy a localhost:8080
+const API = "/api/courses";
 
 /**
  * [READ] Obtiene la lista completa de cursos.

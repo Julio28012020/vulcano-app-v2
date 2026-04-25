@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getCourses } from '../services/courseService';
 
 export const emptyModule = {
   content: {
@@ -13,6 +14,14 @@ export const emptyModule = {
 
 const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
   const [form, setForm] = useState(initial);
+  const [courses, setCourses] = useState([]);
+  const [selectedCourseId, setSelectedCourseId] = useState(initial.courseId || '');
+
+  useEffect(() => {
+    getCourses()
+      .then(setCourses)
+      .catch(() => setCourses([]));
+  }, []);
 
   const setContent = (key) => (e) =>
     setForm((f) => ({
@@ -25,6 +34,22 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
 
   return (
     <div className="mv-form">
+      <div className="mv-form-group">
+        <label className="mv-label">Curso</label>
+        <select
+          className="mv-input"
+          value={selectedCourseId}
+          onChange={(e) => setSelectedCourseId(e.target.value)}
+        >
+          <option value="">Selecciona un curso</option>
+          {courses.map((course) => (
+            <option key={course.id} value={course.id}>
+              {course.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="mv-form-group">
         <label className="mv-label">Nombre del módulo</label>
         <input
@@ -96,8 +121,8 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
         </button>
         <button
           className="mv-btn mv-btn-primary"
-          onClick={() => onSave(form)}
-          disabled={saving || !form.content.name.trim()}
+          onClick={() => onSave(form, selectedCourseId)}
+          disabled={saving || !form.content.name.trim() || !selectedCourseId}
         >
           {saving ? 'Guardando...' : 'Guardar módulo'}
         </button>
