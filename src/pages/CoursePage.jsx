@@ -10,7 +10,7 @@
  * 3. Ejecutar los filtros pesados (buscador asíncrono, filtros de nivel/estado).
  * 4. Orquestar los Modales de Confirmación, Formularios y Notificaciones flotantes.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NavbarPpal from '../components/NavbarPpal';
 import VulcanoFooter from '../components/VulcanoFooter';
 import '../styles/Course.css';
@@ -69,14 +69,14 @@ const CoursePage = () => {
     }
   };
 
-  const load = () => {
+  const load = useCallback(() => {
     setStatus('loading');
     getCourses()
       .then(d => { setCourses(d); setStatus('ok'); })
       .catch(() => setStatus('error'));
-  };
+  }, []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const handleCreate = form => {
     setSaving(true);

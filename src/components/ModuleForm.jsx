@@ -1,21 +1,34 @@
 import { useState, useEffect } from 'react';
 import { getCourses } from '../services/courseService';
-
-export const emptyModule = {
-  content: {
-    name: '',
-    description: '',
-    orderIndex: 1
-  },
-  videoUrl: '',
-  durationInMinutes: 5,
-  status: 'ACTIVE'
-};
+import { emptyModule } from '../constants/moduleConstants';
+import storage from '../helpers/storage';
 
 const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
-  const [form, setForm] = useState(initial);
+  const isEditing = !!initial.id;
+  
+  // Intentar cargar borrador solo si NO estamos editando
+  const savedDraft = !isEditing ? storage.get('module_form_draft') : null;
+  
+  const [form, setForm] = useState(savedDraft || initial);
   const [courses, setCourses] = useState([]);
-  const [selectedCourseId, setSelectedCourseId] = useState(initial.courseId || '');
+  const [selectedCourseId, setSelectedCourseId] = useState(
+    initial.courseId || initial.course?.id || savedDraft?.courseId || ''
+  );
+
+  // Sincronizar cuando cambia el inicial (ej: al abrir editar)
+  useEffect(() => {
+    if (isEditing) {
+      setForm(initial);
+      setSelectedCourseId(initial.courseId || initial.course?.id || '');
+    }
+  }, [initial, isEditing]);
+
+  // Guardar borrador automáticamente si es un nuevo módulo
+  useEffect(() => {
+    if (!isEditing) {
+      storage.set('module_form_draft', { ...form, courseId: selectedCourseId });
+    }
+  }, [form, selectedCourseId, isEditing]);
 
   useEffect(() => {
     getCourses()
@@ -31,6 +44,15 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
 
   const setField = (key) => (e) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const clearDraft = () => {
+    storage.remove('module_form_draft');
+  };
+
+  const handleSave = () => {
+    onSave(form, selectedCourseId);
+    if (!isEditing) clearDraft();
+  };
 
   return (
     <div className="mv-form">
@@ -108,6 +130,28 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
       </div>
 
       <div className="mv-form-group">
+        <label className="mv-label">URL del Markdown (Texto)</label>
+        <input
+          className="mv-input"
+          type="text"
+          placeholder="https://example.com/lesson.md"
+          value={form.markdownUrl}
+          onChange={setField('markdownUrl')}
+        />
+      </div>
+
+      <div className="mv-form-group">
+        <label className="mv-label">URL del Juego Interactivo</label>
+        <input
+          className="mv-input"
+          type="text"
+          placeholder="https://wordwall.net/..."
+          value={form.interactiveGameUrl}
+          onChange={setField('interactiveGameUrl')}
+        />
+      </div>
+
+      <div className="mv-form-group">
         <label className="mv-label">Estado</label>
         <select className="mv-input" value={form.status} onChange={setField('status')}>
           <option value="ACTIVE">Activo</option>
@@ -121,7 +165,7 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
         </button>
         <button
           className="mv-btn mv-btn-primary"
-          onClick={() => onSave(form, selectedCourseId)}
+          onClick={handleSave}
           disabled={saving || !form.content.name.trim() || !selectedCourseId}
         >
           {saving ? 'Guardando...' : 'Guardar módulo'}

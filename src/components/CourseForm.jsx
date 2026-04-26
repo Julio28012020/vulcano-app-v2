@@ -1,18 +1,5 @@
 import { useState } from 'react';
-
-/**
- * OBJETO MOLDE: emptyForm
- * Estado inicial limpio. Se utiliza cuando el usuario presiona "Nuevo curso".
- * Si presiona "Editar", en lugar de esto, se usan los datos pre-existentes del curso.
- */
-export const emptyForm = {
-  name: '',
-  description: '',
-  imageUrl: '',
-  courseLevel: 'BEGINNER',
-  isPublished: false,
-  status: 'ACTIVE',
-};
+import { emptyForm } from '../constants/courseConstants';
 
 /**
  * COMPONENTE: CourseForm (Formulario de Cursos)

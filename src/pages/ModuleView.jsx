@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NavbarPpal from '../components/NavbarPpal';
 import VulcanoFooter from '../components/VulcanoFooter';
 import ModuleCard from '../components/ModuleCard';
-import ModuleForm, { emptyModule } from '../components/ModuleForm';
+import ModuleForm from '../components/ModuleForm';
 import { getModules, createModule, updateModule, deleteModule } from '../services/moduleService';
 import Swal from 'sweetalert2';
 import '../styles/ModuleView.css';
@@ -18,7 +18,7 @@ const ModuleView = () => {
   const [saving, setSaving] = useState(false);
 
   /* ---- Carga de datos ---- */
-  const load = () => {
+  const load = useCallback(() => {
     setStatus('loading');
     getModules()
       .then((data) => {
@@ -29,9 +29,14 @@ const ModuleView = () => {
         setStatus('ok');
       })
       .catch(() => setStatus('error'));
-  };
+  }, []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      load();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [load]);
 
   /* ---- CRUD handlers ---- */
   const handleCreate = (form, courseId) => {

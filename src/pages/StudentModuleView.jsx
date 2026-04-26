@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import NavbarPpal from '../components/NavbarPpal';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import StudentNavbar from '../components/StudentNavbar';
 import ModuleSidebar from '../components/ModuleSidebar';
 import { getModules, getModuleById } from '../services/moduleService';
 import Swal from 'sweetalert2';
@@ -13,21 +15,7 @@ const StudentModuleView = () => {
   const [modules, setModules] = useState([]);
   const [currentModule, setCurrentModule] = useState(null);
   const [status, setStatus] = useState('loading');
-  
-  useEffect(() => {
-    loadModules();
-  }, []);
-
-  useEffect(() => {
-    if (moduleId && modules.length > 0) {
-      loadModuleById(moduleId);
-    } else if (modules.length > 0 && !moduleId) {
-      const firstActive = modules.find(m => m.status === 'ACTIVE');
-      if (firstActive) {
-        navigate(`/StudentModules/${firstActive.id}`, { replace: true });
-      }
-    }
-  }, [moduleId, modules]);
+  const [markdownContent, setMarkdownContent] = useState('');
 
   const loadModules = async () => {
     try {
@@ -35,7 +23,7 @@ const StudentModuleView = () => {
       const sorted = [...data].sort((a, b) => (a.content?.orderIndex || 0) - (b.content?.orderIndex || 0));
       setModules(sorted);
       setStatus('ok');
-    } catch (err) {
+    } catch {
       setStatus('error');
       Swal.fire({
         title: 'Error de conexión',
@@ -51,7 +39,22 @@ const StudentModuleView = () => {
     try {
       const mod = await getModuleById(id);
       setCurrentModule(mod);
-    } catch (err) {
+      setMarkdownContent(''); // Reset
+
+      if (mod.markdownUrl) {
+        try {
+          const res = await fetch(mod.markdownUrl);
+          if (res.ok) {
+            const text = await res.text();
+            setMarkdownContent(text);
+          } else {
+            setMarkdownContent('No se pudo cargar el contenido de texto.');
+          }
+        } catch {
+          setMarkdownContent('Error al cargar el contenido de texto.');
+        }
+      }
+    } catch {
       Swal.fire({
         title: 'Error',
         text: 'No se pudo cargar el módulo.',
@@ -61,6 +64,27 @@ const StudentModuleView = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadModules();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (moduleId && modules.length > 0) {
+      const timer = setTimeout(() => {
+        loadModuleById(moduleId);
+      }, 0);
+      return () => clearTimeout(timer);
+    } else if (modules.length > 0 && !moduleId) {
+      const firstActive = modules.find(m => m.status === 'ACTIVE');
+      if (firstActive) {
+        navigate(`/StudentModules/${firstActive.id}`, { replace: true });
+      }
+    }
+  }, [moduleId, modules, navigate]);
 
   const handleSelectModule = (id) => {
     navigate(`/StudentModules/${id}`);
@@ -98,7 +122,7 @@ const StudentModuleView = () => {
   if (status === 'error') {
     return (
       <div className="smv-container">
-        <NavbarPpal />
+        <StudentNavbar currentModule={null} currentIndex={0} totalModules={0} />
         <div className="smv-error">
           <span className="smv-error-icon">🌋</span>
           <p className="smv-error-text">No se pudo conectar con el backend</p>
@@ -131,15 +155,20 @@ const StudentModuleView = () => {
 
   return (
     <div className="smv-container">
-      <NavbarPpal />
-      
-      <ModuleSidebar 
-        modules={modules} 
-        currentModuleId={currentModule?.id}
-        onSelectModule={handleSelectModule}
+      <StudentNavbar 
+        currentModule={currentModule} 
+        currentIndex={currentIndex >= 0 ? currentIndex : 0} 
+        totalModules={sortedModules.length} 
       />
       
-      <main className="smv-content">
+      <div className="smv-body">
+        <ModuleSidebar 
+          modules={modules} 
+          currentModuleId={currentModule?.id}
+          onSelectModule={handleSelectModule}
+        />
+        
+        <main className="smv-content">
         <div className="smv-content-inner">
           {currentModule ? (
             <>
@@ -163,15 +192,21 @@ const StudentModuleView = () => {
                 </div>
               </header>
 
-              {currentModule.content?.description && (
+              {currentModule.markdownUrl && (
                 <section className="smv-section">
                   <h2 className="smv-section-title">
                     <span className="smv-section-icon">📖</span>
-                    Resumen
+                    Contenido de Lectura
                   </h2>
-                  <p className="smv-text-content">
-                    {currentModule.content.description}
-                  </p>
+                  <div className="smv-text-content markdown-body">
+                    {markdownContent ? (
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {markdownContent}
+                      </ReactMarkdown>
+                    ) : (
+                      'Cargando contenido...'
+                    )}
+                  </div>
                 </section>
               )}
 
@@ -193,33 +228,52 @@ const StudentModuleView = () => {
                 </div>
               )}
 
-              <section className="smv-section">
-                <h2 className="smv-section-title">
-                  <span className="smv-section-icon">🎮</span>
-                  Juego Interactivo
-                </h2>
-                <div className="smv-game-container">
-                  <div className="smv-game-icon">🌋</div>
-                  <h3 className="smv-game-title">¡Pon a prueba tus conocimientos!</h3>
-                  <p className="smv-game-desc">
-                    Completa el juego de este módulo para desbloquear el siguiente.
-                  </p>
-                  <button 
-                    className="smv-game-btn"
-                    onClick={() => {
-                      Swal.fire({
-                        title: '🎮 Juego en Desarrollo',
-                        text: 'El juego interactivo estará disponible pronto.',
-                        icon: 'info',
-                        confirmButtonText: 'Aceptar',
-                        confirmButtonColor: '#472825'
-                      });
-                    }}
-                  >
-                    Iniciar Juego
-                  </button>
-                </div>
-              </section>
+              {currentModule.interactiveGameUrl && (
+                <section className="smv-section">
+                  <h2 className="smv-section-title">
+                    <span className="smv-section-icon">🎮</span>
+                    Laboratorio Interactivo
+                  </h2>
+                  <div className="smv-game-container">
+                    <iframe
+                      src={currentModule.interactiveGameUrl}
+                      className="smv-game-iframe"
+                      title="Juego Interactivo"
+                      allowFullScreen
+                    />
+                  </div>
+                </section>
+              )}
+
+              {!currentModule.interactiveGameUrl && (
+                <section className="smv-section">
+                  <h2 className="smv-section-title">
+                    <span className="smv-section-icon">🎮</span>
+                    Juego Interactivo
+                  </h2>
+                  <div className="smv-game-container">
+                    <div className="smv-game-icon">🌋</div>
+                    <h3 className="smv-game-title">¡Pon a prueba tus conocimientos!</h3>
+                    <p className="smv-game-desc">
+                      Completa el juego de este módulo para desbloquear el siguiente.
+                    </p>
+                    <button 
+                      className="smv-game-btn"
+                      onClick={() => {
+                        Swal.fire({
+                          title: '🎮 Juego en Desarrollo',
+                          text: 'El juego interactivo estará disponible pronto.',
+                          icon: 'info',
+                          confirmButtonText: 'Aceptar',
+                          confirmButtonColor: '#472825'
+                        });
+                      }}
+                    >
+                      Iniciar Juego
+                    </button>
+                  </div>
+                </section>
+              )}
 
               <div className="smv-nav-buttons" style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '24px' }}>
                 <button 
@@ -248,6 +302,7 @@ const StudentModuleView = () => {
           )}
         </div>
       </main>
+      </div>
     </div>
   );
 };
