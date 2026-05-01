@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Modal = ({ title, onClose, children }) => (
-  <div className="cp-overlay" onClick={onClose}>
+  <div className="cp-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
     <div className="cp-modal" onClick={e => e.stopPropagation()}>
       <div className="flex justify-between items-center mb-5">
         <h2 className="cp-modal-title">{title}</h2>

@@ -52,10 +52,13 @@ const CoursePage = () => {
   const [saving, setSaving] = useState(false);
 
   const [viewMode, setViewMode] = useState('grid');
-  const [pendingDelete, setPendingDelete] = useState(null);
   const [courseToDelete, setCourseToDelete] = useState(null);
-  const [undoSeconds, setUndoSeconds] = useState(0);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
+
+  // Leer el rol del usuario desde localStorage (igual que Layout.jsx)
+  const storedUser = localStorage.getItem('user');
+  const currentUser = storedUser ? JSON.parse(storedUser) : null;
+  const roleView = currentUser?.role === 'ADMIN' ? 'ADMIN' : 'USER';
 
   const showToast = (msg, icon = 'success') => {
     Swal.fire({
@@ -101,7 +104,16 @@ const CoursePage = () => {
 
   const handleUpdate = form => {
     setSaving(true);
-    updateCourse(editing.id, form)
+    // Solo enviamos los campos editables al backend (evita errores 400 por campos extra como id, createdAt, modules)
+    const payload = {
+      name: form.name,
+      description: form.description,
+      imageUrl: form.imageUrl,
+      courseLevel: form.courseLevel,
+      isPublished: form.isPublished,
+      status: form.status,
+    };
+    updateCourse(editing.id, payload)
       .then(() => {
         setSaving(false); setModal(null); setEditing(null); showToast('✅ Curso actualizado');
         if (document.startViewTransition) document.startViewTransition(() => load());
@@ -122,45 +134,17 @@ const CoursePage = () => {
     setCourseToDelete(null);
     setDeleteConfirmText('');
 
-    if (pendingDelete) {
-      clearTimeout(pendingDelete.timeoutId);
-      if (pendingDelete.intervalId) clearInterval(pendingDelete.intervalId);
-    }
-
-    setUndoSeconds(20);
-    const intervalId = setInterval(() => {
-      setUndoSeconds(prev => prev > 0 ? prev - 1 : 0);
-    }, 1000);
-
-    const timeoutId = setTimeout(() => {
-      clearInterval(intervalId);
-      executeDelete(course.id);
-    }, 20000);
-
-    setPendingDelete({ id: course.id, timeoutId, intervalId, course });
-
     const removeFn = () => setCourses(prev => prev.filter(c => c.id !== course.id));
     if (document.startViewTransition) document.startViewTransition(removeFn);
     else removeFn();
-  };
 
-  const undoDelete = () => {
-    if (pendingDelete) {
-      clearTimeout(pendingDelete.timeoutId);
-      if (pendingDelete.intervalId) clearInterval(pendingDelete.intervalId);
-      const addFn = () => {
-        setCourses(prev => [...prev, pendingDelete.course].sort((a, b) => a.id - b.id));
-        setPendingDelete(null);
-      };
-      if (document.startViewTransition) document.startViewTransition(addFn);
-      else addFn();
-    }
+    executeDelete(course.id);
   };
 
   const executeDelete = (id) => {
     deleteCourse(id)
       .then(() => {
-        setPendingDelete(null);
+        showToast('✅ Curso eliminado');
       })
       .catch(() => {
         showToast('❌ Error al eliminar el curso en el servidor');
@@ -176,10 +160,18 @@ const CoursePage = () => {
 
   const filteredCourses = courses
     .filter(c => {
-      if (statusFilter === 'ACTIVE' && c.status !== 'ACTIVE') return false;
-      if (statusFilter === 'INACTIVE' && c.status === 'ACTIVE') return false;
-      if (publishedFilter === 'PUBLISHED' && !c.isPublished) return false;
-      if (publishedFilter === 'UNPUBLISHED' && c.isPublished) return false;
+      // Reglas obligatorias para USUARIO: solo cursos Activos y Publicados
+      if (roleView === 'USER') {
+        if (c.status !== 'ACTIVE' || !c.isPublished) return false;
+      } else {
+        // Filtros específicos de Admin
+        if (statusFilter === 'ACTIVE' && c.status !== 'ACTIVE') return false;
+        if (statusFilter === 'INACTIVE' && c.status === 'ACTIVE') return false;
+        if (publishedFilter === 'PUBLISHED' && !c.isPublished) return false;
+        if (publishedFilter === 'UNPUBLISHED' && c.isPublished) return false;
+      }
+
+      // Filtro de Nivel (aplicable a ambos roles)
       if (levelFilter !== 'ALL' && c.courseLevel !== levelFilter) return false;
       return true;
     })
@@ -188,6 +180,9 @@ const CoursePage = () => {
       c.description?.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => a.id - b.id);
+
+  // Mock enrolled courses para Vista Usuario
+  const enrolledCourses = courses.filter((c, i) => i % 3 === 0 && c.status === 'ACTIVE' && c.isPublished).length;
 
   return (
     <div className="w-full">
@@ -199,35 +194,58 @@ const CoursePage = () => {
             <h1 className="cp-heading">Cursos</h1>
             {status === 'loading' && <p className="cp-subheading">Cargando catálogo...</p>}
           </div>
-          <button className="cp-btn-primary" onClick={() => setModal('create')}>
-            + Nuevo curso
-          </button>
+          {roleView === 'ADMIN' && (
+            <button className="cp-btn-primary" onClick={() => setModal('create')}>
+              + Nuevo curso
+            </button>
+          )}
         </div>
 
         {/* Top Stats Widgets */}
         {status === 'ok' && (
           <div className="cp-stats-row">
-            <div className="cp-stat-card">
-              <div className="cp-stat-icon">📚</div>
-              <div className="cp-stat-info">
-                <span className="cp-stat-value">{courses.length}</span>
-                <span className="cp-stat-label">{courses.length === 1 ? 'Curso' : 'Cursos'}</span>
-              </div>
-            </div>
-            <div className="cp-stat-card">
-              <div className="cp-stat-icon">🔴</div>
-              <div className="cp-stat-info">
-                <span className="cp-stat-value">{inactiveCourses}</span>
-                <span className="cp-stat-label">{inactiveCourses === 1 ? 'Inactivo' : 'Inactivos'}</span>
-              </div>
-            </div>
-            <div className="cp-stat-card">
-              <div className="cp-stat-icon">🔒</div>
-              <div className="cp-stat-info">
-                <span className="cp-stat-value">{privateCourses}</span>
-                <span className="cp-stat-label">{privateCourses === 1 ? 'Oculto' : 'Ocultos'}</span>
-              </div>
-            </div>
+            {roleView === 'ADMIN' ? (
+              <>
+                <div className="cp-stat-card">
+                  <div className="cp-stat-icon">📚</div>
+                  <div className="cp-stat-info">
+                    <span className="cp-stat-value">{courses.length}</span>
+                    <span className="cp-stat-label">{courses.length === 1 ? 'Curso' : 'Cursos'}</span>
+                  </div>
+                </div>
+                <div className="cp-stat-card">
+                  <div className="cp-stat-icon">🔴</div>
+                  <div className="cp-stat-info">
+                    <span className="cp-stat-value">{inactiveCourses}</span>
+                    <span className="cp-stat-label">{inactiveCourses === 1 ? 'Inactivo' : 'Inactivos'}</span>
+                  </div>
+                </div>
+                <div className="cp-stat-card">
+                  <div className="cp-stat-icon">🔒</div>
+                  <div className="cp-stat-info">
+                    <span className="cp-stat-value">{privateCourses}</span>
+                    <span className="cp-stat-label">{privateCourses === 1 ? 'Oculto' : 'Ocultos'}</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="cp-stat-card">
+                  <div className="cp-stat-icon">📚</div>
+                  <div className="cp-stat-info">
+                    <span className="cp-stat-value">{courses.filter(c => c.status === 'ACTIVE' && c.isPublished).length}</span>
+                    <span className="cp-stat-label">Cursos</span>
+                  </div>
+                </div>
+                <div className="cp-stat-card">
+                  <div className="cp-stat-icon">🎓</div>
+                  <div className="cp-stat-info">
+                    <span className="cp-stat-value">{enrolledCourses}</span>
+                    <span className="cp-stat-label">Inscrito</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -260,33 +278,37 @@ const CoursePage = () => {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
-            <select
-              className="flex-1 px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-[var(--color-ppal)] focus:ring-4 focus:ring-indigo-100 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-[1.03] hover:shadow-md hover:z-10 font-medium text-slate-700 bg-white/50 backdrop-blur-sm shadow-sm cursor-pointer"
-              value={statusFilter}
-              onChange={(e) => updateFilter(setStatusFilter, e.target.value)}
-            >
-              <option value="ALL">Todos los estados</option>
-              <option value="ACTIVE">🟢 Activos ({courses.filter(c => c.status === 'ACTIVE').length})</option>
-              <option value="INACTIVE">🔴 Inactivos ({courses.filter(c => c.status !== 'ACTIVE').length})</option>
-            </select>
-            <select
-              className="flex-1 px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-[var(--color-ppal)] focus:ring-4 focus:ring-indigo-100 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-[1.03] hover:shadow-md hover:z-10 font-medium text-slate-700 bg-white/50 backdrop-blur-sm shadow-sm cursor-pointer"
-              value={publishedFilter}
-              onChange={(e) => updateFilter(setPublishedFilter, e.target.value)}
-            >
-              <option value="ALL">Toda visibilidad</option>
-              <option value="PUBLISHED">🌐 Públicos ({courses.filter(c => c.isPublished).length})</option>
-              <option value="UNPUBLISHED">🔒 Ocultos ({courses.filter(c => !c.isPublished).length})</option>
-            </select>
+            {roleView === 'ADMIN' && (
+              <>
+                <select
+                  className="flex-1 px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-[var(--color-ppal)] focus:ring-4 focus:ring-indigo-100 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-[1.03] hover:shadow-md hover:z-10 font-medium text-slate-700 bg-white/50 backdrop-blur-sm shadow-sm cursor-pointer"
+                  value={statusFilter}
+                  onChange={(e) => updateFilter(setStatusFilter, e.target.value)}
+                >
+                  <option value="ALL">Todos los estados</option>
+                  <option value="ACTIVE">🟢 Activos ({courses.filter(c => c.status === 'ACTIVE').length})</option>
+                  <option value="INACTIVE">🔴 Inactivos ({courses.filter(c => c.status !== 'ACTIVE').length})</option>
+                </select>
+                <select
+                  className="flex-1 px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-[var(--color-ppal)] focus:ring-4 focus:ring-indigo-100 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-[1.03] hover:shadow-md hover:z-10 font-medium text-slate-700 bg-white/50 backdrop-blur-sm shadow-sm cursor-pointer"
+                  value={publishedFilter}
+                  onChange={(e) => updateFilter(setPublishedFilter, e.target.value)}
+                >
+                  <option value="ALL">Toda visibilidad</option>
+                  <option value="PUBLISHED">🌐 Públicos ({courses.filter(c => c.isPublished).length})</option>
+                  <option value="UNPUBLISHED">🔒 Ocultos ({courses.filter(c => !c.isPublished).length})</option>
+                </select>
+              </>
+            )}
             <select
               className="flex-1 px-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-[var(--color-ppal)] focus:ring-4 focus:ring-indigo-100 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-[1.03] hover:shadow-md hover:z-10 font-medium text-slate-700 bg-white/50 backdrop-blur-sm shadow-sm cursor-pointer"
               value={levelFilter}
               onChange={(e) => updateFilter(setLevelFilter, e.target.value)}
             >
               <option value="ALL">Cualquier nivel</option>
-              <option value="BEGINNER">🐣 Principiante ({courses.filter(c => c.courseLevel === 'BEGINNER').length})</option>
-              <option value="INTERMEDIATE">🛠️ Intermedio ({courses.filter(c => c.courseLevel === 'INTERMEDIATE').length})</option>
-              <option value="ADVANCED">🔥 Avanzado ({courses.filter(c => c.courseLevel === 'ADVANCED').length})</option>
+              <option value="BEGINNER">🐣 Principiante</option>
+              <option value="INTERMEDIATE">🛠️ Intermedio</option>
+              <option value="ADVANCED">🔥 Avanzado</option>
             </select>
           </div>
         </div>
@@ -337,7 +359,7 @@ const CoursePage = () => {
         {status === 'ok' && filteredCourses.length > 0 && (
           <div className={viewMode === 'grid' ? "grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5" : "flex flex-col gap-5"}>
             {filteredCourses.map((c, i) => (
-              <CourseCard key={c.id} course={c} index={i} viewMode={viewMode} onEdit={openEdit} onDelete={confirmDelete} />
+              <CourseCard key={c.id} course={c} index={i} viewMode={viewMode} onEdit={openEdit} onDelete={confirmDelete} roleView={roleView} />
             ))}
           </div>
         )}
@@ -362,8 +384,8 @@ const CoursePage = () => {
         <Modal title="¿Eliminar curso?" onClose={() => setModal(null)}>
           <div className="flex flex-col gap-5">
             <p className="cp-subheading" style={{ fontSize: '14px' }}>
-              ¿Estás seguro de que deseas eliminar el curso <strong>{courseToDelete.name}</strong>? 
-              Esta acción se puede deshacer durante los primeros 20 segundos.
+              ¿Estás seguro de que deseas eliminar el curso <strong>{courseToDelete.name}</strong>?
+              Esta acción no se puede deshacer.
             </p>
 
             <div className="cp-form-group">
@@ -393,16 +415,6 @@ const CoursePage = () => {
       )}
 
 
-
-      {/* Notificación Toast (solo para eliminación pendiente, o dejar que Swal maneje todo) */}
-      {pendingDelete && (
-        <div className="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-4 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] z-50 flex items-center font-medium border border-slate-700 animate-[cp-fadeup_0.3s_ease]">
-          {`🗑️ Se eliminará el curso en ${undoSeconds}s.`}
-          <button className="cp-undo-btn" onClick={undoDelete}>
-            Deshacer
-          </button>
-        </div>
-      )}
 
     </div>
   );

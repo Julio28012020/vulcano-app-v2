@@ -8,8 +8,12 @@
  * @param {Function} onDelete - Función padre a ejecutar cuando se toque Eliminar
  * @param {Number} index - El número de posición de la tarjeta (0, 1, 2...)
  * @param {String} viewMode - Manda "grid" (cuadrados) o "list" (filas horizontales largas)
+ * @param {String} roleView - "USER" o "ADMIN"
  */
-const CourseCard = ({ course, onEdit, onDelete, index, viewMode = 'grid' }) => {
+const CourseCard = ({ course, onEdit, onDelete, index, viewMode = 'grid', roleView = 'ADMIN' }) => {
+
+  // Mock: Para simular que el usuario está inscrito (coincide con el mock de CoursePage)
+  const isEnrolled = roleView === 'USER' && (index % 3 === 0);
 
   // -- LÓGICA DE CÁLCULO DE INTERFAZ --
   // Si existe una fecha de creación y la diferencia entre la fecha de hoy 
@@ -41,9 +45,17 @@ const CourseCard = ({ course, onEdit, onDelete, index, viewMode = 'grid' }) => {
               #{index + 1} <span style={{ opacity: 0.5, fontWeight: 600, fontStyle: 'italic', marginLeft: '4px', fontSize: '11px' }}>(ID Real: {course.id})</span>
             </span>
             <div className="flex gap-2">
-              <span className={course.isPublished ? "cp-pill bg-blue-100 text-blue-700" : "cp-pill bg-gray-200 text-gray-700"}>
-                {course.isPublished ? '🌐 Publicado' : '🔒 Oculto'}
-              </span>
+              {roleView === 'ADMIN' ? (
+                <span className={course.isPublished ? "cp-pill bg-blue-100 text-blue-700" : "cp-pill bg-gray-200 text-gray-700"}>
+                  {course.isPublished ? '🌐 Publicado' : '🔒 Oculto'}
+                </span>
+              ) : (
+                isEnrolled && (
+                  <span className="cp-pill bg-green-100 text-green-800 font-bold">
+                    ✅ Inscrito
+                  </span>
+                )
+              )}
             </div>
           </div>
 
@@ -90,10 +102,24 @@ const CourseCard = ({ course, onEdit, onDelete, index, viewMode = 'grid' }) => {
             )}
           </div>
 
-          {/* Botones de control del CRUD de React */}
+          {/* Botones de acción según Rol */}
           <div className="flex gap-2 mt-1">
-            <button className="cp-card-btn cp-card-edit flex-1" onClick={() => onEdit(course)}>Editar</button>
-            <button className="cp-card-btn cp-card-delete flex-1" onClick={() => onDelete(course)}>Eliminar</button>
+            {roleView === 'ADMIN' ? (
+              <>
+                <button className="cp-card-btn cp-card-edit flex-1" onClick={() => onEdit(course)}>Editar</button>
+                <button className="cp-card-btn cp-card-delete flex-1" onClick={() => onDelete(course)}>Eliminar</button>
+              </>
+            ) : (
+              isEnrolled ? (
+                <button className="cp-card-btn flex-1" style={{ backgroundColor: '#d1fae5', color: '#065f46', borderColor: '#a7f3d0' }}>
+                  📖 VER CURSO
+                </button>
+              ) : (
+                <button className="cp-card-btn flex-1" style={{ backgroundColor: '#fde6cd', color: '#472825', borderColor: '#fbcfe8' }}>
+                  🎓 INSCRIBIRSE
+                </button>
+              )
+            )}
           </div>
         </div>
       </div>

@@ -110,12 +110,12 @@ const CourseForm = ({ initial = emptyForm, onSave, onCancel, saving }) => {
       {/* ----------------- BOTONES DE GUARDADO / CANCELACIÓN ----------------- */}
       <div className="flex gap-3 justify-end mt-2">
         {/* El botón secundario simplemente avisa hacia "arriba" (el componente padre) que queremos cancelar */}
-        <button className="cp-btn-secondary" onClick={onCancel}>Cancelar</button>
+        <button type="button" className="cp-btn-secondary" onClick={onCancel}>Cancelar</button>
 
         {/* El grandioso botón verde primario. 
             onClick={() => handleSubmit()} le envía todo el empaquetado final a la página principal tras validar.
             disabled={saving} es para evitar que el usuario de doble clic si el internet está lento guardando. */}
-        <button className="cp-btn-primary" onClick={handleSubmit} disabled={saving}>
+        <button type="button" className="cp-btn-primary" onClick={handleSubmit} disabled={saving}>
           {saving ? 'Guardando...' : 'Guardar curso'}
         </button>
       </div>
