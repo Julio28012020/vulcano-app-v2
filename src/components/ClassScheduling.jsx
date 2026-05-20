@@ -10,7 +10,7 @@ import {
     deleteSchedule 
 } from '../services/scheduleService';
 
-import { getUserById } from '../services/api';
+import { getUserById, getAssetUrl } from '../services/api';
 
 const ClassScheduling = () => {
     // --- ESTADOS DE EXPERTOS DINÁMICOS ---
@@ -38,44 +38,47 @@ const ClassScheduling = () => {
             setIsLoadingExperts(true);
             try {
                 const data = await getAllSchedules();
-                const uniqueExpertsMap = new Map();
+                
+                // 1. Filtrar solo schedules con status publicado y obtener IDs únicos de expertos
+                const publishedSchedules = data.filter(item => item.status === 'AVAILABLE' || item.status === 'PUBLISHED');
+                const uniqueExpertIds = [...new Set(publishedSchedules.map(item => item.expertId || item.professorId).filter(Boolean))];
 
-                await Promise.all(data.map(async (item) => {
-                    const isPublished = item.status === 'AVAILABLE' || item.status === 'PUBLISHED';
-                    if (!isPublished) return; // Omitir las que estén ocultas/despublicadas
-
-                    const profId = item.professorId || item.expertId;
-                    if (profId && !uniqueExpertsMap.has(profId)) {
-                        // Pre-asignar un placeholder para no perderlo por si falla la llamada
-                        uniqueExpertsMap.set(profId, {
+                // 2. Buscar info real de cada experto una sola vez
+                const expertDataMap = new Map();
+                
+                await Promise.all(uniqueExpertIds.map(async (profId) => {
+                    try {
+                        const user = await getUserById(profId);
+                        
+                        // VALIDACIÓN: Mostrar si es TEACHER o si tiene bio (especialidad)
+                        const isTeacher = user.role === "TEACHER" || (user.profile && user.profile.bio);
+                        if (isTeacher) {
+                            const realName = `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() || user.username || `Profesor #${profId}`;
+                            
+                            expertDataMap.set(profId, {
+                                id: profId,
+                                name: realName,
+                                role: user.profile?.bio || "Experto en el tema",
+                                registrationCode: user.profile?.registrationCode || null,
+                                imageUrl: getAssetUrl(user.profile?.profilePictureUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(realName)}&background=random`
+                            });
+                        }
+                    } catch (e) {
+                        console.error(`Error al buscar el nombre real del profesor ${profId}:`, e);
+                        // No lo agregamos al mapa si falla la búsqueda y no queremos mostrar placeholders sin nombre
+                        // O si prefieres mostrarlo con placeholder, descomenta abajo:
+                        /*
+                        expertDataMap.set(profId, {
                             id: profId,
-                            name: item.name || item.professorName || `Profesor #${profId}`,
-                            role: item.specialty || "Experto en el tema",
+                            name: `Profesor #${profId}`,
+                            role: "Experto en el tema",
                             imageUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent('P')}&background=random`
                         });
-
-                        try {
-                            const user = await getUserById(profId);
-                            
-                            // VALIDACIÓN: Solo mostrar si el experto tiene rol TEACHER
-                            if (user.role !== "TEACHER") return;
-
-                            const realName = `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim();
-                            if (realName) {
-                                uniqueExpertsMap.set(profId, {
-                                    id: profId,
-                                    name: realName,
-                                    role: user.profile?.bio || "Experto en el tema",
-                                    imageUrl: user.profile?.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(realName)}&background=random`
-                                });
-                            }
-                        } catch (e) {
-                            console.error("Error al buscar el nombre real del profesor:", e);
-                        }
+                        */
                     }
                 }));
 
-                setExperts(Array.from(uniqueExpertsMap.values()));
+                setExperts(Array.from(expertDataMap.values()));
             } catch (error) {
                 console.error("Error al cargar profesores:", error);
             } finally {
@@ -230,7 +233,7 @@ const ClassScheduling = () => {
                                 <div className="cp-card-list-content flex flex-col flex-1 justify-between p-5">
                                     <div>
                                         <div className="flex justify-between items-center mb-3">
-                                            <span className="cp-card-id">#{expert.id} - Formador</span>
+                                            <span className="cp-card-id">{expert.registrationCode || `#${expert.id}`} - Formador</span>
                                             {isScheduled ? (
                                                 <span className="cp-pill bg-green-100 text-green-700">
                                                     ✅ Agendada

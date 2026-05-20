@@ -14,7 +14,7 @@
 // ============================================================
 
 import { useState, useRef, useEffect } from "react";
-import { updateUser, uploadProfilePicture } from "../services/api";
+import { updateUser, uploadProfilePicture, getAssetUrl } from "../services/api";
 
 const EditProfileModal = ({ user, onClose, onSaved }) => {
   const fileRef = useRef(null);
@@ -206,7 +206,7 @@ const EditProfileModal = ({ user, onClose, onSaved }) => {
             title="Haz clic para cambiar tu foto"
           >
             {preview ? (
-              <img src={preview} alt="Vista previa" className="w-full h-full object-cover" />
+              <img src={getAssetUrl(preview)} alt="Vista previa" className="w-full h-full object-cover" />
             ) : (
               <span className="text-4xl select-none">👤</span>
             )}

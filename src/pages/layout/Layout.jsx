@@ -17,7 +17,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import "../../styles/Layout.css";
 import EditProfileModal from "../../components/EditProfileModal";
-import { getUserById } from "../../services/api";
+import { getUserById, getAssetUrl } from "../../services/api";
 import { Icon } from "@iconify/react";
 
 const Layout = ({ children }) => {
@@ -74,7 +74,7 @@ const Layout = ({ children }) => {
         <div className="sidebar-profile">
           {profilePic ? (
             <img
-              src={profilePic}
+              src={getAssetUrl(profilePic)}
               alt={`Foto de perfil de ${firstName}`}
               className="sidebar-avatar"
             />

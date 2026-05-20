@@ -5,9 +5,9 @@
 // Todas las llamadas HTTP del proyecto de auth pasan por aquí.
 // ============================================================
 
-// URL relativa: Vite intercepta /api/* y lo redirige a localhost:8080
-// Esto evita el error de CORS en desarrollo
-const API_BASE_URL = "/api/";
+// URL relativa en desarrollo: Vite intercepta /api/* y lo redirige a localhost:8080.
+// En producción, lee de import.meta.env.VITE_API_BASE_URL (.env.production).
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/";
 
 // Objeto con todos los endpoints del backend
 export const end_points = {
@@ -244,5 +244,26 @@ export async function enrollInCourse(userId, courseId) {
   }
 
   return response.json();
+}
+
+// ----------------------------------------------------------
+// getAssetUrl
+// ----------------------------------------------------------
+// Resuelve la URL de una imagen o archivo estático (como fotos de perfil).
+// En desarrollo, devuelve la ruta relativa (ej: /uploads/img.png) usando el proxy.
+// En producción, concatena la ruta con el dominio del backend de Render.
+// ----------------------------------------------------------
+export function getAssetUrl(path) {
+  if (!path) return null;
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("blob:") || path.startsWith("data:")) return path;
+
+  // Quitamos '/api/' o '/api' del final de API_BASE_URL para obtener el host base del backend
+  const backendBase = API_BASE_URL.endsWith("/api/")
+    ? API_BASE_URL.slice(0, -5)
+    : API_BASE_URL.endsWith("/api")
+      ? API_BASE_URL.slice(0, -4)
+      : "";
+
+  return `${backendBase}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
