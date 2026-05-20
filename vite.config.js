@@ -7,16 +7,15 @@ export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
     proxy: {
-      // Toda petición que empiece con /api será redirigida al backend
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'https://cursosvulcano-backend.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       '/uploads': {
-        target: 'http://localhost:8080',
+        target: 'https://cursosvulcano-backend.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },

@@ -48,7 +48,7 @@ const ClassManagement = () => {
       await Promise.all(uniqueExpertIds.map(async (id) => {
         try {
           const user = await getUserById(id);
-          expertNames[id] = `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() || `Docente ${id}`;
+          expertNames[id] = `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() || user.username || `Docente ${id}`;
           expertSpecialties[id] = user.profile?.bio || "Especialidad no definida";
         } catch (e) {
           expertNames[id] = `Profesor #${id}`;
@@ -77,8 +77,10 @@ const ClassManagement = () => {
     try {
       const data = await getUserById(id);
       
-      // VALIDACIÓN DE ROL: Solo permitir si es TEACHER
-      if (data.role !== "TEACHER") {
+      // VALIDACIÓN DE ROL: Permitir si es TEACHER o si tiene especialidad en el perfil (bio)
+      const isTeacher = data.role === "TEACHER" || (data.profile && data.profile.bio);
+      
+      if (!isTeacher) {
         setFormData(prev => ({ ...prev, name: "ID no corresponde a un Docente", specialty: "" }));
         return;
       }

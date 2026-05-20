@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllUsers, updateUserRole } from "../services/api";
+import { getAllUsers, updateUserRole, getAssetUrl } from "../services/api";
 import Swal from "sweetalert2";
 import ConfirmModal from "../components/ConfirmModal";
 import "../styles/UserManagement.css";
@@ -106,12 +106,19 @@ const UserManagement = () => {
                                 <td>
                                     <div className="user-info-cell">
                                         {u.profile?.profilePictureUrl ? (
-                                            <img src={u.profile.profilePictureUrl} alt="Avatar" className="user-avatar-mini" />
+                                            <img src={getAssetUrl(u.profile.profilePictureUrl)} alt="Avatar" className="user-avatar-mini" />
                                         ) : (
                                             <div className="user-avatar-mini flex items-center justify-center bg-gray-100">👤</div>
                                         )}
                                         <div className="user-details">
-                                            <span className="user-full-name">{u.profile?.firstName} {u.profile?.lastName}</span>
+                                            <span className="user-full-name">
+                                                {u.profile?.firstName} {u.profile?.lastName}
+                                                {u.profile?.registrationCode && (
+                                                    <span className="ml-2 px-2 py-0.5 text-[10px] font-mono font-bold bg-[#d3abb0]/40 text-[#472825] rounded-full tracking-wider">
+                                                        {u.profile.registrationCode}
+                                                    </span>
+                                                )}
+                                            </span>
                                             <span className="user-username">@{u.username}</span>
                                         </div>
                                     </div>
