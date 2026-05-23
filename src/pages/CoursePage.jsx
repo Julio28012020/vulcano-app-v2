@@ -18,11 +18,14 @@ import VulcanoFooter from '../components/VulcanoFooter';
 import Swal from 'sweetalert2';
 
 import '../styles/Course.css';
+import '../styles/ModuleView.css';
 import { getCourses, createCourse, updateCourse, deleteCourse } from "../services/courseService";
 import { enrollInCourse, getUserById } from "../services/api";
 import Modal from '../components/Modal';
 import CourseForm from '../components/CourseForm';
 import CourseCard from '../components/CourseCard';
+
+const mascotSvg = '/Icons/vulcancito.svg';
 
 const CourseCardSkeleton = () => (
   <div className="cp-skeleton-card">
@@ -238,9 +241,14 @@ const CoursePage = () => {
 
         {/* Encabezado */}
         <div className="flex justify-between items-end flex-wrap gap-4 mb-4">
-          <div>
-            <h1 className="cp-heading">Cursos</h1>
-            {status === 'loading' && <p className="cp-subheading">Cargando catálogo...</p>}
+          <div className="flex items-center gap-4">
+            <div className="mv-mascot-frame">
+              <img src={mascotSvg} alt="Vulcancito mascota" />
+            </div>
+            <div>
+              <h1 className="cp-heading">Cursos</h1>
+              {status === 'loading' && <p className="cp-subheading">Cargando catálogo...</p>}
+            </div>
           </div>
           {roleView === 'ADMIN' && (
             <button className="cp-btn-primary" onClick={() => setModal('create')}>
