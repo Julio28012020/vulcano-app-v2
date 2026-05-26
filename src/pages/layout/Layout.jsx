@@ -112,7 +112,7 @@ const Layout = ({ children }) => {
           </button>
 
 
-          
+
           <button
             className="sidebar-nav-btn"
             onClick={() => navigate("/layout/review")}
@@ -120,7 +120,7 @@ const Layout = ({ children }) => {
             <span className="btn-icon">💬</span>
             <span className="sidebar-text">Opiniones</span>
           </button>
-           
+
 
           {user?.role === "ADMIN" && (
             <>
@@ -144,6 +144,13 @@ const Layout = ({ children }) => {
               >
                 <span className="btn-icon">👨‍🏫</span>
                 <span className="sidebar-text">Docentes</span>
+              </button>
+              <button
+                className="sidebar-nav-btn"
+                onClick={() => window.open("https://jcorrea24.github.io/Vulcano_Dashboard/", "_blank")}
+              >
+                <span className="btn-icon">📊</span>
+                <span className="sidebar-text">Dashboard</span>
               </button>
             </>
           )}

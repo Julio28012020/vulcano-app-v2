@@ -1,12 +1,35 @@
 @import "tailwindcss";
 
-/* 🎨 Paleta de Colores */
+@theme {
+  /* 🎨 Paleta de Colores Base */
+  --color-dark: #472825;
+  --color-mid: #96786F;
+  --color-blush: #D3ABB0;
+  --color-cream: #FDE4BC;
+  --color-white: #FFF4E2;
+
+  /* 📊 Colores para Gráficos (Alto contraste) */
+  --color-chart-1: #2B5B84; /* Azul acero - contraste frío */
+  --color-chart-2: #D96C4A; /* Naranja terracota - destaca visualmente */
+  --color-chart-3: #5C8065; /* Verde salvia/bosque - complementario */
+  --color-chart-4: #E6B54A; /* Mostaza cálido - brillante y legible */
+  --color-chart-5: #7A5C7F; /* Púrpura apagado - diferenciador */
+}
+
+/* 🎨 Paleta de Colores y Gráficos */
 :root {
   --color-dark: #472825;   /* Navbar, texto, botones primarios, footer */
   --color-mid: #96786F;    /* Texto secundario, nav links */
   --color-blush: #D3ABB0;  /* Bordes, tags, pildoras */
   --color-cream: #FDE4BC;  /* Botones, fondos hero */
   --color-white: #FFF4E2;  /* Fondo general, tarjetas */
+
+  /* 📊 Colores para Gráficos */
+  --color-chart-1: #2B5B84;
+  --color-chart-2: #D96C4A;
+  --color-chart-3: #5C8065;
+  --color-chart-4: #E6B54A;
+  --color-chart-5: #7A5C7F;
 }
 section {
 
