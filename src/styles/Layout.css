@@ -46,6 +46,7 @@
 
 .layout-sidebar.closed .sidebar-name,
 .layout-sidebar.closed .sidebar-username,
+.layout-sidebar.closed .sidebar-role,
 .layout-sidebar.closed .sidebar-text {
   display: none;
 }
