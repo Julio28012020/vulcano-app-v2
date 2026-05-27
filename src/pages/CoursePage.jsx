@@ -237,7 +237,7 @@ const CoursePage = () => {
 
   return (
     <div className="w-full">
-      <main className="flex-1 max-w-4xl w-full mx-auto px-5 py-10">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-5 py-10">
 
         {/* Encabezado */}
         <div className="flex justify-between items-end flex-wrap gap-4 mb-4">
@@ -419,7 +419,7 @@ const CoursePage = () => {
 
         {/* Grid de tarjetas */}
         {status === 'ok' && filteredCourses.length > 0 && (
-          <div className={viewMode === 'grid' ? "grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5" : "flex flex-col gap-5"}>
+          <div className={viewMode === 'grid' ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" : "flex flex-col gap-5"}>
             {filteredCourses.map((c, i) => (
               <CourseCard key={c.id} course={c} index={i} viewMode={viewMode} onEdit={openEdit} onDelete={confirmDelete} onModules={handleModules} onEnroll={handleEnroll} onViewCourse={handleViewCourse} isEnrolled={enrolledIds.has(c.id)} roleView={roleView} />
             ))}
