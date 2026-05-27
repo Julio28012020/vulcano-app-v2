@@ -156,7 +156,7 @@ const UserManagement = () => {
             <div className="userman-container">
                 <div className="userman-header">
                     <h1 className="userman-title">Gestión de Usuarios</h1>
-                    <p className="userman-subtitle">Panel exclusivo para administradores. Aquí puedes gestionar los accesos y roles del sistema.</p>
+                    <p className="userman-subtitle">Aquí puedes gestionar los accesos y roles del sistema.</p>
                 </div>
                 {renderContent()}
             </div>
