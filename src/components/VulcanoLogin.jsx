@@ -8,7 +8,6 @@
 //   3. Si el backend dice OK → redirigimos a /layout
 //   4. Si hay error → mostramos un mensaje en pantalla
 // ============================================================
-import "../styles/VulcanoLogin.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
