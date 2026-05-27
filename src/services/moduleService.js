@@ -1,7 +1,9 @@
 
-// URL relativa: el proxy de Vite redirige /api/* a localhost:8080
-// Igual que courseService.js y scheduleService.js
-const API = "/api/modules";
+// URL base del API - se obtiene de las variables de entorno
+// En desarrollo: Vite proxy redirige /api/* a localhost:8080
+// En producción: usa la URL completa de Render para evitar conflictos en Vercel
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/";
+const API = `${API_BASE_URL}modules`;
 
 /**
  * Helper: obtiene el userId del usuario logueado desde localStorage.

@@ -5,11 +5,11 @@
  * Se encarga de hacer las peticiones usando la API Fetch estándar de JS.
  */
 
-// URL base - Vite hace proxy a localhost:8080
-// URL relativa: el proxy de Vite redirige /api/* a localhost:8080
-// Esto evita el error de CORS y permite que el proyecto funcione
-// en cualquier servidor, no solo en localhost.
-const API = "/api/courses";
+// URL base del API - se obtiene de las variables de entorno
+// En desarrollo: Vite proxy redirige /api/* a localhost:8080
+// En producción: usa la URL completa de Render para evitar conflictos en Vercel
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/";
+const API = `${API_BASE_URL}courses`;
 
 /**
  * Helper: extrae el mensaje de error de una respuesta HTTP fallida.
