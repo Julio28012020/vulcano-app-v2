@@ -77,8 +77,8 @@ const ClassManagement = () => {
     try {
       const data = await getUserById(id);
       
-      // VALIDACIÓN DE ROL: Permitir si es TEACHER o si tiene especialidad en el perfil (bio)
-      const isTeacher = data.role === "TEACHER" || (data.profile && data.profile.bio);
+      // VALIDACIÓN DE ROL: Permitir si es TEACHER
+      const isTeacher = data.role === "TEACHER";
       
       if (!isTeacher) {
         setFormData(prev => ({ ...prev, name: "ID no corresponde a un Docente", specialty: "" }));

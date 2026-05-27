@@ -50,8 +50,8 @@ const ClassScheduling = () => {
                     try {
                         const user = await getUserById(profId);
                         
-                        // VALIDACIÓN: Mostrar si es TEACHER o si tiene bio (especialidad)
-                        const isTeacher = user.role === "TEACHER" || (user.profile && user.profile.bio);
+                        // VALIDACIÓN: Mostrar si es TEACHER
+                        const isTeacher = user.role === "TEACHER";
                         if (isTeacher) {
                             const realName = `${user.profile?.firstName || ""} ${user.profile?.lastName || ""}`.trim() || user.username || `Profesor #${profId}`;
                             

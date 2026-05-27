@@ -25,9 +25,8 @@ const UserManagement = () => {
         try {
             setStatus(true);
             const data = await getAllUsers();
-            // FILTRO INTELIGENTE: Ocultamos a los que tienen rol TEACHER 
-            // O los que tienen una especialidad (bio) registrada, ya que son docentes.
-            const filteredUsers = data.filter(u => u.role !== "TEACHER" && !u.profile?.bio);
+            // FILTRO INTELIGENTE: Ocultamos a los que tienen rol TEACHER, ya que son docentes.
+            const filteredUsers = data.filter(u => u.role !== "TEACHER");
             setUsers(filteredUsers.sort((a, b) => a.id - b.id));
         } catch (err) {
             setError(err.message || "Error al cargar la lista de usuarios.");
