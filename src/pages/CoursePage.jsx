@@ -247,7 +247,13 @@ const CoursePage = () => {
             </div>
             <div>
               <h1 className="cp-heading">Cursos</h1>
-              {status === 'loading' && <p className="cp-subheading">Cargando catálogo...</p>}
+              {status === 'loading' ? (
+                <p className="cp-subheading">Cargando catálogo...</p>
+              ) : roleView === 'ADMIN' ? (
+                <p className="cp-subheading">Aquí puedes gestionar, crear y actualizar los cursos de la plataforma.</p>
+              ) : (
+                <p className="cp-subheading">Aprende a tu propio ritmo y adquiere nuevas habilidades.</p>
+              )}
             </div>
           </div>
           {roleView === 'ADMIN' && (

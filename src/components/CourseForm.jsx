@@ -63,7 +63,7 @@ const CourseForm = ({ initial = emptyForm, onSave, onCancel, saving }) => {
       <div className="flex flex-col gap-1 cp-form-group">
         <label className="cp-label">Descripción</label>
         {/* textarea permite que la caja tenga múltiples renglones (rows=3). */}
-        <textarea className="cp-input cp-textarea" placeholder="¿De qué trata este curso?" rows={3} value={form.description} onChange={set('description')} />
+        <textarea className="cp-input cp-textarea" placeholder="¿De qué trata este curso?" rows={5} value={form.description} onChange={set('description')} />
       </div>
 
       {/* ----------------- CAMPO: URL DE LA IMAGEN ----------------- */}
