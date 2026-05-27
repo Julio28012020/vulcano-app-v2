@@ -4,6 +4,8 @@ import { getAllUsers } from "../services/api";
 import Swal from "sweetalert2";
 import "../styles/TeacherForm.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/";
+
 // ────────────────────────────────────────────────────────────
 // TeacherForm
 // • Lista de docentes registrados con su ID
@@ -77,8 +79,7 @@ const TeacherForm = () => {
     const payload = {
       username,
       password,
-      // NO enviamos role aquí para que el backend use el default (USER)
-      // Luego lo actualizamos con PATCH para evitar problemas de compatibilidad
+      role: "TEACHER",
       profile: {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -92,30 +93,27 @@ const TeacherForm = () => {
 
     try {
       // PASO 1: Crear el usuario
-      const res = await fetch("/api/users", {
+      const res = await fetch(`${API_BASE_URL}users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
-        const errText = await res.text();
-        console.error("Error al crear usuario:", errText);
-        throw new Error(errText);
+        let errorMessage = "No se pudo registrar el docente.";
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          try {
+            const errorText = await res.text();
+            if (errorText) errorMessage = errorText;
+          } catch {}
+        }
+        throw new Error(errorMessage);
       }
 
       const saved = await res.json();
-
-      // PASO 2: Actualizar role a TEACHER (ignoramos si falla — el usuario igual se creó)
-      try {
-        await fetch(`/api/users/${saved.id}/role`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ role: "TEACHER" }),
-        });
-      } catch (roleErr) {
-        console.warn("No se pudo asignar rol TEACHER:", roleErr);
-      }
 
       // ✅ Toast de éxito
       await Swal.fire({
@@ -145,8 +143,9 @@ const TeacherForm = () => {
 
       setFormData(emptyForm);
       setView("LIST"); // ← volvemos a la lista tras confirmar
-    } catch {
-      Swal.fire("Error", "No se pudo registrar el docente.", "error");
+    } catch (err) {
+      console.error("Error en registro:", err);
+      Swal.fire("Error", err.message || "No se pudo registrar el docente.", "error");
     } finally {
       setSaving(false);
     }
@@ -167,7 +166,7 @@ const TeacherForm = () => {
 
     if (isConfirmed) {
       try {
-        const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+        const res = await fetch(`${API_BASE_URL}users/${id}`, { method: "DELETE" });
         if (!res.ok) throw new Error();
         Swal.fire({ title: "Eliminado", icon: "success", background: "#fff4e2" });
         loadTeachers();
