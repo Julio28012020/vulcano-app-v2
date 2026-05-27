@@ -15,17 +15,6 @@ const teamMembers = [
 
 
 
-/* --- LINKS DE NAVEGACIÓN --- */
-
-/* Lista de secciones del sitio con su ruta */
-const navLinks = [
-  { label: "Inicio",   href: "#" },
-  { label: "Desafíos", href: "#" },
-  { label: "Aprender", href: "#" },
-  { label: "Ranking",  href: "#" },
-  { label: "Reseñas",  href: "#" },
-];
-
 
 
 /* --- ICONO --- */
@@ -55,22 +44,7 @@ const VulcanoFooter = () => {
           </p>
         </div>
 
-        {/* --- Columna 2: Navegación --- */}
-        {/* Links de las secciones del sitio */}
-        <div className="vf-nav">
-          <h3 className="vf-col-title">Navegación</h3>
-          <ul className="vf-nav-list">
-            {navLinks.map((link) => (
-              <li key={link.label}>
-                <a href={link.href} className="vf-nav-link">
-                  <span className="vf-link-arrow">▶</span>
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        
+
         {/* --- Columna 4: Equipo --- */}
         {/* Lista de integrantes con avatar de inicial y cargo */}
         <div className="vf-team">

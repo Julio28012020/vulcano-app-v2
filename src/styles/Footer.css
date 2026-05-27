@@ -18,13 +18,13 @@
   );
 }
 
-/* Grid de 3 columnas centrado con ancho máximo */
+/* Grid de 2 columnas centrado con ancho máximo */
 .vf-container {
   max-width: 1000px;                     /* Ancho máximo del contenedor */
   margin: 0 auto;                        /* Centra el contenedor horizontalmente */
   padding: 10px 24px 8px;               /* Espaciado interno: arriba, lados, abajo */
   display: grid;                         /* Activa el modelo de grid */
-  grid-template-columns: 1.6fr 1fr 1.4fr; /* 3 columnas con proporciones distintas */
+  grid-template-columns: 1.6fr 1.4fr;    /* 2 columnas con proporciones distintas */
   gap: 16px;                             /* Espacio entre las columnas */
 }
 
@@ -35,7 +35,7 @@
 .vf-brand {
   display: flex;                         /* Activa flexbox */
   flex-direction: column;                /* Apila elementos en vertical */
-  gap: 4px;                              /* Espacio entre logo y descripción */
+  gap: 8px;                              /* Espacio entre logo y descripción */
 }
 
 .vf-logo {
@@ -45,23 +45,23 @@
 }
 
 .vf-logo-icon {
-  height: 26px;                          /* Altura del ícono del logo */
-  width: 26px;                           /* Ancho del ícono del logo */
+  height: 44px;                          /* Altura del ícono del logo */
+  width: 44px;                           /* Ancho del ícono del logo */
   object-fit: contain;                   /* Mantiene proporción sin distorsionar */
 }
 
 .vf-logo-text {
-  font-size: 13px;                       /* Tamaño del texto del logo */
+  font-size: 22px;                       /* Tamaño del texto del logo */
   font-weight: 800;                      /* Texto muy grueso */
   color: var(--color-white);             /* Color blanco */
   letter-spacing: 1.5px;                /* Espaciado entre letras */
 }
 
 .vf-brand-desc {
-  font-size: 10px;                       /* Tamaño pequeño para la descripción */
+  font-size: 15px;                       /* Tamaño para la descripción */
   line-height: 1.4;                      /* Espaciado entre líneas */
   color: var(--color-blush);             /* Color rosado */
-  max-width: 220px;                      /* Limita el ancho del texto */
+  max-width: 320px;                      /* Limita el ancho del texto */
 }
 
 
@@ -69,12 +69,12 @@
 /* --- TÍTULO DE CADA COLUMNA --- */
 
 .vf-col-title {
-  font-size: 9px;                        /* Tamaño pequeño para el título */
+  font-size: 12px;                       /* Tamaño para el título */
   font-weight: 800;                      /* Texto muy grueso */
   letter-spacing: 2px;                   /* Espaciado amplio entre letras */
   text-transform: uppercase;             /* Convierte el texto a mayúsculas */
   color: var(--color-cream);             /* Color crema */
-  margin-bottom: 6px;                    /* Espacio debajo del título */
+  margin-bottom: 10px;                   /* Espacio debajo del título */
   padding-bottom: 4px;                   /* Espacio interno debajo del texto */
   border-bottom: 1px solid rgba(211, 171, 176, 0.25); /* Línea separadora semitransparente */
 }
@@ -119,7 +119,7 @@
   list-style: none;                      /* Quita los puntos de la lista */
   display: flex;                         /* Activa flexbox */
   flex-direction: column;                /* Apila los miembros en vertical */
-  gap: 3px;                              /* Espacio entre miembros */
+  gap: 8px;                              /* Espacio entre miembros */
 }
 
 .vf-team-member {
@@ -139,12 +139,12 @@
 }
 
 .vf-member-avatar {
-  width: 18px;                           /* Ancho del círculo avatar */
-  height: 18px;                          /* Alto del círculo avatar */
+  width: 24px;                           /* Ancho del círculo avatar */
+  height: 24px;                          /* Alto del círculo avatar */
   border-radius: 50%;                    /* Hace el elemento circular */
   background-color: var(--color-mid);    /* Color de fondo del avatar */
   color: var(--color-white);             /* Color de la letra inicial */
-  font-size: 9px;                        /* Tamaño de la letra inicial */
+  font-size: 11px;                       /* Tamaño de la letra inicial */
   font-weight: 800;                      /* Letra muy gruesa */
   display: flex;                         /* Activa flexbox para centrar la letra */
   align-items: center;                   /* Centra verticalmente la letra */
@@ -160,7 +160,7 @@
 }
 
 .vf-member-name {
-  font-size: 10px;                       /* Tamaño del nombre del miembro */
+  font-size: 13px;                       /* Tamaño del nombre del miembro */
   font-weight: 700;                      /* Nombre en negrita */
   color: var(--color-white);             /* Color blanco */
   line-height: 1.2;                      /* Espaciado entre líneas */
@@ -168,7 +168,7 @@
 }
 
 .vf-member-role {
-  font-size: 9px;                        /* Tamaño pequeño del cargo */
+  font-size: 11px;                       /* Tamaño del cargo */
   color: var(--color-mid);               /* Color intermedio más tenue */
   display: block;                        /* Ocupa su propia línea */
 }
@@ -179,13 +179,13 @@
 
 .vf-bottom-bar {
   border-top: 1px solid rgba(211, 171, 176, 0.2); /* Línea separadora semitransparente */
-  padding: 6px 24px;                     /* Espaciado interno */
+  padding: 10px 24px;                    /* Espaciado interno */
   display: flex;                         /* Activa flexbox */
   justify-content: center;               /* Centra el contenido horizontalmente */
   align-items: center;                   /* Centra el contenido verticalmente */
   gap: 8px;                              /* Espacio entre los textos */
   flex-wrap: wrap;                       /* Permite que el contenido salte de línea */
-  font-size: 10px;                       /* Tamaño del texto */
+  font-size: 13px;                       /* Tamaño del texto */
   color: var(--color-mid);               /* Color intermedio */
   font-weight: 600;                      /* Texto semi-negrita */
   letter-spacing: 0.5px;                /* Espaciado leve entre letras */
@@ -197,7 +197,7 @@
 }
 
 .vf-bottom-bar span:last-child {
-  font-size: 12px;                       /* Tamaño ligeramente mayor para el emoji del equipo */
+  font-size: 15px;                       /* Tamaño ligeramente mayor para el emoji del equipo */
 }
 
 
@@ -241,17 +241,17 @@
   }
 
   .vf-brand-desc {
-    font-size: 9px;                      /* Reduce el tamaño del texto */
+    font-size: 14px;                      /* Reduce el tamaño del texto */
     max-width: 100%;                     /* Ocupa todo el ancho disponible */
   }
 
   .vf-bottom-bar {
-    padding: 6px 16px;                   /* Reduce el padding */
-    font-size: 9px;                      /* Reduce el tamaño del texto */
+    padding: 8px 16px;                   /* Reduce el padding */
+    font-size: 11px;                      /* Reduce el tamaño del texto */
   }
 
   .vf-bottom-bar span:last-child {
-    font-size: 11px;                     /* Reduce tamaño del emoji */
+    font-size: 13px;                     /* Reduce tamaño del emoji */
   }
 }
 
