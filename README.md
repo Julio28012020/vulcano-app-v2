@@ -81,7 +81,47 @@ server: {
 }
 ```
 
-> **Importante:** Los servicios (`api.js`, `courseService.js`, `moduleService.js`) usan rutas relativas como `/api/courses` que Vite redirige automáticamente. No es necesario configurar la URL del backend manualmente.
+> **Importante:** Los servicios ahora usan `import.meta.env.VITE_API_BASE_URL` para compatibilidad con producción. En desarrollo, Vite redirige `/api/*` al backend.
+
+---
+
+## 🚀 Deployment en Vercel
+
+### Configuración Requerida
+
+Cuando despliegues en **Vercel**, debes configurar la siguiente variable de entorno:
+
+#### En el Dashboard de Vercel:
+1. Ve a tu proyecto → **Settings** → **Environment Variables**
+2. Agrega una nueva variable:
+   - **Name:** `VITE_API_BASE_URL`
+   - **Value:** `https://cursosvulcano-backend.onrender.com/api/`
+   - **Environments:** Production, Preview, Development
+
+### Archivos de Configuración
+
+- **`.env.development`** - Configuración local (para desarrollo con `npm run dev`)
+- **`.env.production`** - Configuración de producción (se usa en build)
+- **`vercel.json`** - Configuración específica de Vercel (rewrites para SPA)
+
+### Proceso de Deploy
+
+```bash
+# 1. Git push a tu rama
+git push origin main
+
+# 2. Vercel detecta automáticamente el cambio
+# 3. Vercel instala dependencias: npm install
+# 4. Vercel ejecuta el build: npm run build
+# 5. Vercel publica el contenido de /dist
+```
+
+### Troubleshooting
+
+Si las peticiones a la API fallan en Vercel:
+- Verifica que `VITE_API_BASE_URL` está configurada correctamente
+- Revisa que el backend (Render) está activo y accesible
+- Comprueba los logs de build en Vercel: **Deployments** → último deploy → **Logs**
 
 ---
 
