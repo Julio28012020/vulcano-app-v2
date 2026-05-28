@@ -1,15 +1,20 @@
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import ModuleCard from '../components/ModuleCard';
 import ModuleForm from '../components/ModuleForm';
-import { getModules, createModule, updateModule, deleteModule } from '../services/moduleService';
+import { getModules, getModulesByCourseId, createModule, updateModule, deleteModule } from '../services/moduleService';
 import '../styles/ModuleView.css';
 
 const mascotSvg = '/Icons/vulcancito.svg';
 
 const ModuleView = () => {
+  const [searchParams] = useSearchParams();
+  const queryCourseId = searchParams.get('courseId');
+  const queryCourseName = searchParams.get('courseName');
+
   const [modules, setModules] = useState([]);
   const [status, setStatus] = useState('loading');
   const [modal, setModal] = useState(null);     // null | 'create' | 'edit' | 'confirm'
@@ -37,7 +42,9 @@ const ModuleView = () => {
   /* ---- Carga de datos ---- */
   const load = useCallback(() => {
     setStatus('loading');
-    getModules()
+    const fetchPromise = queryCourseId ? getModulesByCourseId(queryCourseId) : getModules();
+    
+    fetchPromise
       .then((data) => {
         const sorted = [...data].sort(
           (a, b) => (a.content?.orderIndex || 0) - (b.content?.orderIndex || 0)
@@ -46,7 +53,7 @@ const ModuleView = () => {
         setStatus('ok');
       })
       .catch(() => setStatus('error'));
-  }, []);
+  }, [queryCourseId]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -163,8 +170,9 @@ const ModuleView = () => {
           <div className="mv-hero-text">
             <h1 className="mv-hero-title">Módulos de Aprendizaje</h1>
             <p className="mv-hero-subtitle">
+              {queryCourseName ? `Curso: ${decodeURIComponent(queryCourseName)}` : ''}
               {status === 'ok'
-                ? `${modules.length} módulo${modules.length !== 1 ? 's' : ''} en el camino de lava 🌋`
+                ? ` • ${modules.length} módulo${modules.length !== 1 ? 's' : ''} en el camino de lava 🌋`
                 : 'Cargando tu camino volcánico...'}
             </p>
           </div>
@@ -263,7 +271,12 @@ const ModuleView = () => {
               <h2 className="mv-modal-title">🌋 Nuevo módulo</h2>
               <button className="mv-modal-close" onClick={() => setModal(null)}>✕</button>
             </div>
-            <ModuleForm onSave={handleCreate} onCancel={() => setModal(null)} saving={saving} />
+            <ModuleForm 
+              onSave={handleCreate} 
+              onCancel={() => setModal(null)} 
+              saving={saving} 
+              defaultCourseId={queryCourseId} 
+            />
           </div>
         </div>
       )}

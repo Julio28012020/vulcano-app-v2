@@ -3,7 +3,7 @@ import { getCourses } from '../services/courseService';
 import { emptyModule } from '../constants/moduleConstants';
 import storage from '../helpers/storage';
 
-const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
+const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving, defaultCourseId }) => {
   const isEditing = !!initial.id;
   
   // Intentar cargar borrador solo si NO estamos editando
@@ -12,7 +12,7 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
   const [form, setForm] = useState(savedDraft || initial);
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState(
-    initial.courseId || initial.course?.id || savedDraft?.courseId || ''
+    initial.courseId || initial.course?.id || defaultCourseId || savedDraft?.courseId || ''
   );
 
   // Sincronizar cuando cambia el inicial (ej: al abrir editar)
