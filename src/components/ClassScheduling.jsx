@@ -233,7 +233,7 @@ const ClassScheduling = () => {
                                 <div className="cp-card-list-content flex flex-col flex-1 justify-between p-5">
                                     <div>
                                         <div className="flex justify-between items-center mb-3">
-                                            <span className="cp-card-id">{expert.registrationCode || `#${expert.id}`} - Formador</span>
+                                            <span className="cp-card-id">Formador</span>
                                             {isScheduled ? (
                                                 <span className="cp-pill bg-green-100 text-green-700">
                                                     ✅ Agendada
