@@ -38,19 +38,40 @@ const extractError = async (res, fallback) => {
 export const getModules = async () => {
   const res = await fetch(API);
   if (!res.ok) throw new Error("Error backend al obtener módulos");
-  return await res.json();
+  const data = await res.json();
+  return data.map((m) => ({
+    ...m,
+    content: {
+      ...m.content,
+      orderIndex: m.orderIndex !== undefined ? m.orderIndex : m.content?.orderIndex,
+    },
+  }));
 };
 
 export const getModuleById = async (id) => {
   const res = await fetch(`${API}/${id}`);
   if (!res.ok) throw new Error("Error backend al obtener el módulo");
-  return await res.json();
+  const m = await res.json();
+  return {
+    ...m,
+    content: {
+      ...m.content,
+      orderIndex: m.orderIndex !== undefined ? m.orderIndex : m.content?.orderIndex,
+    },
+  };
 };
 
 export const getModulesByCourseId = async (courseId) => {
   const res = await fetch(`${API}/course/${courseId}`);
   if (!res.ok) throw new Error("Error backend al obtener módulos del curso");
-  return await res.json();
+  const data = await res.json();
+  return data.map((m) => ({
+    ...m,
+    content: {
+      ...m.content,
+      orderIndex: m.orderIndex !== undefined ? m.orderIndex : m.content?.orderIndex,
+    },
+  }));
 };
 
 export const createModule = async (mod, courseId) => {
@@ -59,16 +80,33 @@ export const createModule = async (mod, courseId) => {
   const userId = getUserId();
   if (userId) headers['X-User-Id'] = userId;
 
+  const orderVal = mod.orderIndex !== undefined ? mod.orderIndex : mod.content?.orderIndex;
+  const payload = {
+    ...mod,
+    orderIndex: orderVal ? Number(orderVal) : null,
+    content: {
+      ...mod.content,
+      orderIndex: orderVal ? Number(orderVal) : null,
+    },
+  };
+
   const res = await fetch(url, {
     method: 'POST',
     headers,
-    body: JSON.stringify(mod)
+    body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const msg = await extractError(res, "Error al crear módulo");
     throw new Error(msg);
   }
-  return await res.json();
+  const saved = await res.json();
+  return {
+    ...saved,
+    content: {
+      ...saved.content,
+      orderIndex: saved.orderIndex !== undefined ? saved.orderIndex : saved.content?.orderIndex,
+    },
+  };
 };
 
 export const updateModule = async (id, mod) => {
@@ -76,16 +114,33 @@ export const updateModule = async (id, mod) => {
   const userId = getUserId();
   if (userId) headers['X-User-Id'] = userId;
 
+  const orderVal = mod.orderIndex !== undefined ? mod.orderIndex : mod.content?.orderIndex;
+  const payload = {
+    ...mod,
+    orderIndex: orderVal ? Number(orderVal) : null,
+    content: {
+      ...mod.content,
+      orderIndex: orderVal ? Number(orderVal) : null,
+    },
+  };
+
   const res = await fetch(`${API}/${id}`, {
     method: 'PUT',
     headers,
-    body: JSON.stringify(mod)
+    body: JSON.stringify(payload),
   });
   if (!res.ok) {
     const msg = await extractError(res, "Error al actualizar módulo");
     throw new Error(msg);
   }
-  return await res.json();
+  const updated = await res.json();
+  return {
+    ...updated,
+    content: {
+      ...updated.content,
+      orderIndex: updated.orderIndex !== undefined ? updated.orderIndex : updated.content?.orderIndex,
+    },
+  };
 };
 
 export const deleteModule = async (id) => {

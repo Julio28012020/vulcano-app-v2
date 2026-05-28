@@ -102,8 +102,8 @@ const ModuleForm = ({ initial = emptyModule, onSave, onCancel, saving }) => {
             className="mv-input"
             type="number"
             min={1}
-            value={form.content.orderIndex}
-            onChange={setContent('orderIndex')}
+            value={form.orderIndex !== undefined ? form.orderIndex : (form.content?.orderIndex || '')}
+            onChange={setField('orderIndex')}
           />
         </div>
         <div className="mv-form-group">

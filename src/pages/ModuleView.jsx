@@ -71,11 +71,11 @@ const ModuleView = () => {
         });
         load();
       })
-      .catch(() => {
+      .catch((err) => {
         setSaving(false);
         Swal.fire({
           title: 'Error',
-          text: 'No se pudo crear el módulo',
+          text: err.message || 'No se pudo crear el módulo',
           icon: 'error',
           confirmButtonText: 'Aceptar',
           confirmButtonColor: '#472825'
@@ -99,11 +99,11 @@ const ModuleView = () => {
         });
         load();
       })
-      .catch(() => {
+      .catch((err) => {
         setSaving(false);
         Swal.fire({
           title: 'Error',
-          text: 'No se pudo actualizar el módulo',
+          text: err.message || 'No se pudo actualizar el módulo',
           icon: 'error',
           confirmButtonText: 'Aceptar',
           confirmButtonColor: '#472825'
@@ -130,12 +130,12 @@ const ModuleView = () => {
         });
         load();
       })
-      .catch(() => {
+      .catch((err) => {
         setDeleteId(null);
         setModal(null);
         Swal.fire({
           title: 'Error',
-          text: 'No se pudo eliminar el módulo',
+          text: err.message || 'No se pudo eliminar el módulo',
           icon: 'error',
           confirmButtonText: 'Aceptar',
           confirmButtonColor: '#472825'
