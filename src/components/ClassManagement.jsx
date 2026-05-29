@@ -267,6 +267,7 @@ const ClassManagement = () => {
         await Promise.all(createPromises);
       }
 
+      Swal.close(); // ← Cerramos el loader antes de mostrar el resultado
       Swal.fire({
         icon: "success",
         title: editId ? "Clase Actualizada" : "Clase Creada",
@@ -277,6 +278,7 @@ const ClassManagement = () => {
       setViewMode("LIST");
       loadClasses();
     } catch (err) {
+      Swal.close(); // ← Cerramos el loader antes de mostrar el error
       Swal.fire("Error", "No se pudo guardar la información", "error");
     }
   };

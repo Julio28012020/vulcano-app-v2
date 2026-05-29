@@ -182,6 +182,7 @@ const ClassScheduling = () => {
 
             setIsModalOpen(false);
 
+            Swal.close(); // ← Cerramos el loader antes de mostrar el resultado
             Swal.fire({
                 title: "Clase Agendada",
                 text: `Has agendado tu clase con éxito el ${selectedDate} a las ${selectedTime}.`,
@@ -191,6 +192,7 @@ const ClassScheduling = () => {
                 color: "#472825"
             });
         } catch (error) {
+            Swal.close(); // ← Cerramos el loader antes de mostrar el error
             Swal.fire("Error", "No se pudo agendar la clase: " + error.message, "error");
         }
     };
